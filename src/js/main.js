@@ -107,6 +107,21 @@
   });
   if (location.hash && /^#q-/.test(location.hash)) { const d = $(location.hash); if (d && d.tagName === 'DETAILS') { d.open = true; } }
 
+  /* ---------- product loops: play when in view, pause otherwise ---------- */
+  const vids = $$('video[data-autoplay]');
+  const stillNow = function () { return window.__boootieStill && window.__boootieStill(); };
+  if (vids.length && !reduced && 'IntersectionObserver' in window) {
+    const iov = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        const v = en.target;
+        if (en.isIntersecting && !stillNow()) { const p = v.play(); if (p && p.catch) p.catch(function () { /* autoplay blocked: poster stays */ }); }
+        else v.pause();
+      });
+    }, { threshold: 0.25 });
+    vids.forEach(function (v) { iov.observe(v); });
+  }
+  window.__boootieVideos = function (still) { vids.forEach(function (v) { if (still) v.pause(); else if (!reduced) { const p = v.play(); if (p && p.catch) p.catch(function () {}); } }); };
+
   /* ---------- pause / play motion (the loops run longer than 5 seconds) ---------- */
   const mt = $('#motion-toggle');
   if (mt) {
@@ -117,6 +132,7 @@
       mt.setAttribute('aria-pressed', still ? 'true' : 'false');
       mt.textContent = still ? 'Play motion' : 'Pause motion';
       const mv = $('model-viewer'); if (mv) { if (still) mv.removeAttribute('auto-rotate'); else if (!reduced) mv.setAttribute('auto-rotate', ''); }
+      if (window.__boootieVideos) window.__boootieVideos(still);
     };
     mt.addEventListener('click', function () { still = !still; try { localStorage.setItem('boootie_still', still ? '1' : '0'); } catch (e) { /* ignore */ } apply(); });
     apply();
@@ -167,10 +183,10 @@
         mv.setAttribute('shadow-softness', '0.9');
         mv.setAttribute('exposure', '0.9');
         mv.setAttribute('environment-image', 'neutral');
-        mv.setAttribute('camera-orbit', '38deg 68deg 140%');
+        mv.setAttribute('camera-orbit', '38deg 68deg auto');
         mv.setAttribute('min-camera-orbit', 'auto 40deg auto');
         mv.setAttribute('max-camera-orbit', 'auto 100deg auto');
-        mv.setAttribute('field-of-view', '22deg');
+        mv.setAttribute('field-of-view', '26deg');
         if (!reduced && !(window.__boootieStill && window.__boootieStill())) { mv.setAttribute('auto-rotate', ''); }
         mv.setAttribute('auto-rotate-delay', '0'); mv.setAttribute('rotation-per-second', '14deg');
         mv.addEventListener('load', function () { box.setAttribute('data-ready', '1'); track('model_loaded'); });

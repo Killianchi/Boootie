@@ -11,16 +11,18 @@
     "build": "npm run doodles && npm run css && npm run html",
     "dev": "npm run build && npx serve dist",
     "renders": "node scripts/render.mjs",
-    "og": "node scripts/og.mjs"
+    "og": "node scripts/og.mjs",
+    "encode": "node scripts/encode.mjs"
   },
   "devDependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "lighthouse": "^12.8.2",
     "playwright": "^1.56.1",
     "sharp": "^0.34.3"
   },
   "dependencies": {
-    "tailwindcss": "^4.1.14",
-    "@tailwindcss/cli": "^4.1.14"
+    "@tailwindcss/cli": "^4.1.14",
+    "tailwindcss": "^4.1.14"
   },
   "engines": {
     "node": ">=20"

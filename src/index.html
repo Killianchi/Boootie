@@ -24,7 +24,7 @@
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://ajax.googleapis.com" crossorigin>
 <link rel="preload" href="/fonts/Figtree.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/img/poster.webp" as="image" fetchpriority="high">
+<link rel="preload" href="/img/poster.webp" as="image" imagesrcset="/img/poster-600.webp 600w, /img/poster.webp 1200w" imagesizes="(min-width: 768px) 560px, 100vw" fetchpriority="high">
 <link rel="stylesheet" href="/style.css">
 <style>:root{--accent:{{accent}};--on-accent:{{onAccent}}}</style>
 <script>document.documentElement.classList.replace('no-js','js')</script>
@@ -43,12 +43,14 @@
   {{> hero-field-m}}
   <template id="field-d">{{> hero-field-d}}</template>
   <div class="hero-inner">
-    <header class="wrap flex h-16 items-center justify-between">
-      <a class="brand label-pill" href="/" aria-label="boootie, home" translate="no">boootie</a>
-      <button type="button" id="motion-toggle" class="motion-toggle label-pill" aria-pressed="false">Pause motion</button>
+    <header class="wrap pt-3">
+      <div class="topbar glass">
+        <a class="brand" href="/" aria-label="boootie, home" translate="no">boootie</a>
+        <button type="button" id="motion-toggle" class="motion-toggle" aria-pressed="false">Pause motion</button>
+      </div>
     </header>
     <div class="wrap grid items-center gap-8 pb-10 pt-2 md:grid-cols-12 md:gap-6 md:pb-20 md:pt-6 lg:pt-10">
-      <div class="sticker p-5 md:col-span-6 md:p-8 lg:col-span-6">
+      <div class="glass p-5 md:col-span-6 md:p-8 lg:col-span-6">
         <h1 id="headline" data-headlines="{{headlinesJson}}" class="text-[40px] md:text-[52px] lg:text-[58px]">{{headline}}</h1>
         <p class="mt-3 text-[17px] md:text-xl">{{subtext}}</p>
         <div class="mt-5 flex items-center gap-2">
@@ -60,7 +62,7 @@
       <div class="relative px-3 md:col-span-6 md:px-6 lg:px-10">
         {{> halo}}
         <div id="model" class="model-box" data-src="/models/boootie.glb" data-poster="/img/poster.webp" data-alt="boootie, a small matte black wedge with a USB-C plug. Drag to turn it.">
-          <img src="/img/poster.webp" width="1200" height="900" alt="boootie, a small matte black wedge with a USB-C plug" fetchpriority="high" decoding="async">
+          <img src="/img/poster.webp" srcset="/img/poster-600.webp 600w, /img/poster.webp 1200w" sizes="(min-width: 768px) 560px, 100vw" width="1200" height="900" alt="boootie, a small matte black wedge with a USB-C plug" fetchpriority="high" decoding="async">
         </div>
         <p class="hand label-pill absolute -bottom-2 left-6 text-[22px] md:left-10 md:text-2xl">the real thing, 40&nbsp;x&nbsp;22&nbsp;mm</p>
         <div class="absolute -bottom-3 right-2 w-14 md:right-6 md:w-16" aria-hidden="true">{{> boot-hero}}</div>
@@ -102,17 +104,17 @@
     <h2 class="text-3xl md:text-5xl">Things you can ask for</h2>
     <p class="mt-3 max-w-[48ch] text-lg">Three to start with. It works inside the apps already on your phone.</p>
     <div class="mt-10 grid gap-5 md:mt-14 md:grid-cols-12 md:gap-6">
-      <article class="tile p-5 md:col-span-7 md:p-7">
+      <article class="tile glass p-5 md:col-span-7 md:p-7">
         <div class="mx-auto max-w-[340px]">{{> scene-table}}</div>
         <p class="hand mt-4 text-[26px] md:text-[30px]">“Book us a table for four on Friday at eight.”</p>
         <p class="mt-3 max-w-[44ch]">It opens your booking app, finds a free slot and reserves it.</p>
       </article>
-      <article class="tile p-5 md:col-span-5 md:p-7">
+      <article class="tile glass p-5 md:col-span-5 md:p-7">
         <div class="mx-auto max-w-[300px]">{{> scene-chat}}</div>
         <p class="hand mt-4 text-[26px] md:text-[30px]">“What did I miss in the family chat? Tell them I’m in.”</p>
         <p class="mt-3 max-w-[44ch]">It reads the thread, tells you what happened and sends your reply.</p>
       </article>
-      <article class="tile p-5 md:col-span-12 md:grid md:grid-cols-12 md:items-center md:gap-6 md:p-7">
+      <article class="tile glass p-5 md:col-span-12 md:grid md:grid-cols-12 md:items-center md:gap-6 md:p-7">
         <div class="mx-auto max-w-[320px] md:col-span-5">{{> scene-ride}}</div>
         <div class="md:col-span-7">
           <p class="hand mt-4 text-[26px] md:mt-0 md:text-[30px]">“Get me a ride home.”</p>
@@ -130,23 +132,29 @@
     <h2 class="text-3xl md:text-5xl">The object</h2>
     <p class="mt-3 max-w-[48ch] text-lg">A slim matte black wedge. No lights, no battery, nothing to charge.</p>
     <div class="mt-10 grid gap-5 md:mt-14 md:grid-cols-2 md:gap-6">
-      <figure class="figure">
-        <img src="/img/fig-top.webp" width="1200" height="900" loading="lazy" decoding="async" alt="boootie from above at an angle: a matte black wedge, 40 by 22 millimetres, with the boootie wordmark inlaid on top">
+      <figure class="figure glass">
+        <video class="fig-media" width="1200" height="900" muted loop playsinline preload="metadata" poster="/img/turntable-poster.webp" aria-label="boootie turning slowly, seen from every side" data-autoplay>
+          <source src="/img/turntable.webm" type="video/webm">
+          <source src="/img/turntable.mp4" type="video/mp4">
+        </video>
         <p class="annot hand left-4 top-4"><span class="label-pill">40&nbsp;x&nbsp;22&nbsp;mm, matte black</span></p>
         <p class="annot hand bottom-4 right-4">{{> arrow-label}}<span class="label-pill">glossy wordmark inlay, no lights</span></p>
       </figure>
-      <figure class="figure">
-        <img src="/img/fig-edge.webp" width="1200" height="900" loading="lazy" decoding="async" alt="boootie in profile: as thick as a phone where the plug is, tapering to a 4.2 millimetre edge">
+      <figure class="figure glass">
+        <img src="/img/fig-edge.webp" srcset="/img/fig-edge-600.webp 600w, /img/fig-edge.webp 1200w" sizes="(min-width: 768px) 560px, 100vw" width="1200" height="900" loading="lazy" decoding="async" alt="boootie in profile: as thick as a phone where the plug is, tapering to a 4.2 millimetre edge">
         <p class="annot hand left-4 top-4"><span class="label-pill">as thick as your phone here</span></p>
         <p class="annot hand bottom-4 right-4"><span class="label-pill">4.2&nbsp;mm here</span>{{> arrow-label-flip}}</p>
       </figure>
-      <figure class="figure">
-        <img src="/img/fig-phone.webp" width="1200" height="900" loading="lazy" decoding="async" alt="boootie plugged into the bottom of a phone, its top flush with the screen. The screen shows a group chat with a reply being typed">
-        <p class="annot hand left-4 top-4"><span class="label-pill">sits flush with the screen</span></p>
-        <p class="annot hand bottom-4 left-4">{{> arrow-label}}<span class="label-pill">reads as part of the phone</span></p>
+      <figure class="figure glass">
+        <video class="fig-media" width="1200" height="900" muted loop playsinline preload="metadata" poster="/img/plugin-poster.webp" aria-label="boootie sliding up into the USB-C port on the bottom of an iPhone and sitting flush with the screen" data-autoplay>
+          <source src="/img/plugin.webm" type="video/webm">
+          <source src="/img/plugin.mp4" type="video/mp4">
+        </video>
+        <p class="annot hand left-4 top-4"><span class="label-pill">plugs into the bottom of your iPhone</span></p>
+        <p class="annot hand bottom-4 left-4">{{> arrow-label}}<span class="label-pill">sits flush with the screen</span></p>
       </figure>
-      <figure class="figure">
-        <img src="/img/fig-port.webp" width="1200" height="900" loading="lazy" decoding="async" alt="the far edge of boootie, with its second USB-C port for pass-through charging">
+      <figure class="figure glass">
+        <img src="/img/fig-port.webp" srcset="/img/fig-port-600.webp 600w, /img/fig-port.webp 1200w" sizes="(min-width: 768px) 560px, 100vw" width="1200" height="900" loading="lazy" decoding="async" alt="the far edge of boootie, with its second USB-C port for pass-through charging">
         <p class="annot hand left-4 top-4"><span class="label-pill">second USB-C port</span></p>
         <p class="annot hand bottom-4 right-4">{{> arrow-label}}<span class="label-pill">your charger plugs in here</span></p>
       </figure>
@@ -168,11 +176,11 @@
         <li class="flex gap-4"><span class="h-12 w-12 flex-none">{{> check}}</span><p><strong>Pay the remaining {{rest}} when yours ships.</strong> Estimated {{shipDate}}. If the date moves, you hear it from us first, and you can still refund.</p></li>
       </ul>
     </div>
-    <div class="sticker p-5 md:col-span-5 md:p-7">
+    <div class="glass p-5 md:col-span-5 md:p-7">
       <p class="hand text-[26px]">hold one for {{deposit}}</p>
       <a id="preorder-cta" data-cta="preorder" class="btn btn-primary mt-3 w-full" href="{{stripeLink}}">{{cta}}</a>
       <p class="fine mt-3">{{deposit}} deposit, fully refundable, anytime. Estimated to ship {{shipDate}}.</p>
-      <hr class="my-6 border-0 border-t-[3px] border-black">
+      <hr class="my-6 border-0 border-t border-black/15">
       <p class="font-bold">Not ready? Get launch updates.</p>
       <form id="signup" action="{{formAction}}" method="POST" data-support="{{supportEmail}}" novalidate>
         <label for="email" class="fine mt-3 block font-bold">Email</label>
@@ -203,7 +211,7 @@
       <details id="q-ship">
         <summary>When does it ship?<span class="chevron-wrap">{{> chevron}}</span></summary>
         <div class="answer">
-          <p>Our estimate is {{shipDate}}. We manufacture in Shenzhen once pre-orders close, so the date depends on that run.</p>
+          <p>We’re aiming to ship {{shipDate}}. We manufacture in Shenzhen once pre-orders close, so the date depends on that run.</p>
           <p class="mt-3">If the date moves, you hear it from us first, and you can refund your deposit at any point.</p>
         </div>
       </details>
@@ -239,7 +247,7 @@
 </main>
 
 <!-- 7. Footer -->
-<footer class="relative border-t-[3px] border-black">
+<footer class="relative border-t border-black/15">
   <div class="wrap grid gap-8 py-12 md:grid-cols-12 md:py-16">
     <div class="md:col-span-7">
       <p class="brand" translate="no">boootie</p>

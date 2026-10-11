@@ -17,6 +17,7 @@ const html = `<!doctype html><html lang="en" class="js"><head><meta charset="utf
 <style>:root{--accent:${cfg.accent};--on-accent:${cfg.onAccent}} html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:#fff}
 .og{position:relative;width:1200px;height:630px;overflow:hidden}
 .panel{position:absolute;left:64px;top:118px;width:560px;padding:36px 40px}
+.panel h1{color:var(--accent)}
 .panel h1{font-size:62px}
 .panel p{font-size:24px;margin-top:16px}
 .brand{position:absolute;left:64px;top:44px;font-size:34px}
@@ -26,7 +27,7 @@ const html = `<!doctype html><html lang="en" class="js"><head><meta charset="utf
 <div class="og">
   ${read('hero-field-d').replace('class="field field-d doodle pending"', 'class="field doodle"').replace('viewBox="0 0 1440 900"', 'viewBox="120 120 1200 630"')}
   <div class="brand label-pill">boootie</div>
-  <div class="sticker panel"><h1>${headline}</h1><p>${cfg.subtext}</p></div>
+  <div class="glass panel"><h1>${headline}</h1><p>${cfg.subtext}</p></div>
   <div class="prod">${read('halo')}<img src="/img/poster.webp" alt=""></div>
 </div></body></html>`;
 

@@ -167,7 +167,7 @@
         mv.setAttribute('shadow-softness', '0.9');
         mv.setAttribute('exposure', '0.9');
         mv.setAttribute('environment-image', 'neutral');
-        mv.setAttribute('camera-orbit', '38deg 68deg 105%');
+        mv.setAttribute('camera-orbit', '38deg 68deg 128%');
         mv.setAttribute('min-camera-orbit', 'auto 40deg auto');
         mv.setAttribute('max-camera-orbit', 'auto 100deg auto');
         mv.setAttribute('field-of-view', '22deg');

@@ -90,7 +90,7 @@ scene('scene-ride', 320, 220, [
 
 // pointers and small accents used inline
 out('pointer-cta', `<svg class="doodle pointer" viewBox="0 0 60 60" aria-hidden="true" focusable="false">${place('arrow-down', { x: 30, y: 30, size: 56, rot: 96, strokePx: 3, cls: 'nudge' })}</svg>`);
-out('underline', `<svg class="doodle underline" viewBox="0 0 100 18" aria-hidden="true" focusable="false"><use href="#d-underline-wide" stroke-width="3.4"/></svg>`);
+out('underline', `<svg class="doodle underline" viewBox="0 0 100 18" preserveAspectRatio="none" aria-hidden="true" focusable="false"><use href="#d-underline-wide" stroke-width="3"/></svg>`);
 out('ruler', `<svg class="doodle" viewBox="0 0 100 100" aria-hidden="true" focusable="false">${place('ruler', { x: 50, y: 50, size: 96, rot: -4, strokePx: 3 })}</svg>`);
 out('refund', `<svg class="doodle" viewBox="0 0 100 100" aria-hidden="true" focusable="false">${place('refund', { x: 50, y: 50, size: 92, rot: 0, strokePx: 3 })}</svg>`);
 out('check', `<svg class="doodle" viewBox="0 0 100 100" aria-hidden="true" focusable="false">${place('check', { x: 50, y: 50, size: 92, rot: -4, strokePx: 3.2 })}</svg>`);

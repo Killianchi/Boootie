@@ -45,7 +45,7 @@
   .fine { font-size: .875rem; line-height: 1.4; font-weight: 500; }
   .label-pill { background: #fff; border-radius: 10px; padding: 2px 8px; }
   .u { position: relative; display: inline-block; }
-  .u .underline { position: absolute; left: -1%; bottom: -.18em; width: 102%; height: auto; pointer-events: none; }
+  .u .underline { position: absolute; left: -1%; bottom: -.16em; width: 102%; height: .34em; pointer-events: none; }
   .input { width: 100%; min-height: 56px; padding: 0 1rem; border: 3px solid #000; border-radius: var(--radius-ui); background: #fff; color: #000; font-weight: 500; }
   .input::placeholder { color: #4a4a4a; }
   .input:focus-visible { outline: 3px solid #000; outline-offset: 3px; }

@@ -131,7 +131,7 @@ export const motifs = {
   'arrow-up-right': [poly([[12, 88], [40, 70], [56, 44], [86, 16]], false, false), ...arrowhead(86, 16, -45, 14)],
   circle: [ellipse(50, 50, 46, 38, -20, 380, 40)],
   underline: [wave(4, 50, 96, 50, 4, 2, 30)],
-  'underline-wide': Object.assign([wave(2, 9, 98, 9, 2.8, 2, 36)], { box: [100, 18], wobble: 0.3, step: 4 }),
+  'underline-wide': Object.assign([wave(2, 9, 98, 9, 2.8, 2, 36)], { box: [100, 18], wobble: 0.3, step: 4, nss: true }),
   'underline-wide-2': Object.assign([wave(2, 7, 98, 7, 2.6, 2, 36), wave(8, 15, 84, 15, 2.2, 1.5, 28)], { box: [100, 20], wobble: 0.3, step: 4 }),
   'underline-2': [wave(4, 46, 96, 46, 4, 2, 30), wave(10, 60, 80, 60, 3, 1.5, 24)],
   squiggle: [wave(6, 50, 94, 50, 14, 3, 48)],
@@ -173,7 +173,7 @@ function linePath(pts, closed) { return 'M' + pts.map(([x, y]) => `${f1(x)} ${f1
 export function renderMotif(id, { wobble = 0.9, step = 7, seed = 0 } = {}) {
   const strokes = motifs[id]; if (!strokes) throw new Error('unknown motif ' + id);
   const rnd = mulberry32(hash(id) + seed);
-  wobble = strokes.wobble ?? wobble; step = strokes.step ?? step;
+  wobble = strokes.wobble ?? wobble; step = strokes.step ?? step; const extra = strokes.nss ? ' vector-effect="non-scaling-stroke"' : '';
   let out = '';
   const expand = (list, tx = 0, ty = 0, sc = 1) => list.flatMap(st => {
     if (st.ref) return expand(motifs[st.ref], tx + st.x * sc, ty + st.y * sc, sc * st.s);
@@ -186,7 +186,7 @@ export function renderMotif(id, { wobble = 0.9, step = 7, seed = 0 } = {}) {
     let pts = subdivide(s.pts, closed, step);
     pts = jitter(pts, rnd, wobble);
     const d = s.sharp ? linePath(pts, closed) : catmullRomPath(pts, closed);
-    out += `<path d="${d}" pathLength="1"/>`;
+    out += `<path d="${d}" pathLength="1"${extra}/>`;
   }
   return out;
 }

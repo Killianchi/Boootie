@@ -13,8 +13,14 @@ const money = n => '$' + Number(n).toLocaleString('en-US');
 // derived values
 const underlineSvg = readFileSync(root + 'src/doodles/underline.svg', 'utf8');
 const headlineHtml = h => esc(h).replace(/\[([^\]]+)\]/, (_, w) => `<span class="u">${w}${underlineSvg}</span>`);
+// Until a real Stripe Payment Link is configured, the buy buttons become an honest
+// "Get launch updates" link to the signup form, so the site can be live without a dead checkout.
+const stripeReady = !/REPLACE_ME/.test(cfg.stripeLink);
 const v = {
   ...cfg,
+  cta: stripeReady ? cfg.cta : 'Get launch updates',
+  stripeLink: stripeReady ? cfg.stripeLink : '#signup',
+  holdLine: stripeReady ? `hold one for ${money(cfg.depositUsd)}` : 'deposits open soon',
   price: money(cfg.priceUsd),
   deposit: money(cfg.depositUsd),
   rest: money(cfg.priceUsd - cfg.depositUsd),

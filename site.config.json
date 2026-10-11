@@ -13,11 +13,11 @@
   "cta": "Reserve yours",
   "priceUsd": 139,
   "depositUsd": 29,
-  "stripeLink": "https://buy.stripe.com/REPLACE_ME",
+  "stripeLink": "https://buy.stripe.com/5kQbJ28xD0Fw48Cdkb38400",
   "shipDate": "before Christmas",
   "formspreeId": "REPLACE_ME",
   "supportEmail": "hello@boootie.com",
   "accent": "#D97757",
   "onAccent": "#000000",
-  "placeholders": "depositUsd, stripeLink, formspreeId and supportEmail are placeholders until confirmed."
+  "placeholders": "formspreeId and supportEmail are placeholders until confirmed."
 }

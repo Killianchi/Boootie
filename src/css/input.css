@@ -165,3 +165,5 @@ a.underline:hover, footer a:hover { text-decoration-thickness: 3px; }
 
 /* below-the-fold sections are laid out lazily */
 #can, #object, #preorder, #faq, footer { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+
+.figure video.fit-contain { object-fit: contain; background: #fff; }

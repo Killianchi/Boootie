@@ -97,6 +97,20 @@
   </div>
 </section>
 
+<!-- 2b. Your AI, your data -->
+<section id="yours" class="relative pb-16 md:pb-24">
+  <div class="wrap grid gap-5 md:grid-cols-2 md:gap-6">
+    <div class="glass glass-flat p-6 md:p-8">
+      <h2 class="text-2xl md:text-4xl">Bring your own AI</h2>
+      <p class="mt-3 max-w-[44ch] text-lg">Connect your Claude or ChatGPT subscription, or use any model you want. boootie is the hands; you choose the brain.</p>
+    </div>
+    <div class="glass glass-flat p-6 md:p-8">
+      <h2 class="text-2xl md:text-4xl">Private by design</h2>
+      <p class="mt-3 max-w-[44ch] text-lg">Designed in Switzerland and built to Swiss and EU (GDPR) privacy standards. Your data is never sold, and you can delete it anytime.</p>
+    </div>
+  </div>
+</section>
+
 <!-- 3. What it can do -->
 <section id="can" class="relative pt-32 pb-16 md:pt-40 md:pb-24">
   {{> band-tasks}}
@@ -172,7 +186,7 @@
       <p class="mt-3 text-xl md:text-2xl">{{price}} at launch. Hold yours today with a {{deposit}} deposit.</p>
       <ul class="mt-8 grid gap-6">
         <li class="flex gap-4"><span class="h-12 w-12 flex-none">{{> coin}}</span><p><strong>Pay a {{deposit}} deposit now.</strong> Fully refundable, anytime. No questions asked.</p></li>
-        <li class="flex gap-4"><span class="h-12 w-12 flex-none">{{> box}}</span><p><strong>We manufacture in Shenzhen once pre-orders close.</strong> You’ll hear from us as it progresses.</p></li>
+        <li class="flex gap-4"><span class="h-12 w-12 flex-none">{{> box}}</span><p><strong>Designed in Switzerland, made once pre-orders close.</strong> You’ll hear from us as it progresses.</p></li>
         <li class="flex gap-4"><span class="h-12 w-12 flex-none">{{> check}}</span><p><strong>Pay the remaining {{rest}} when yours ships.</strong> Estimated {{shipDate}}. If the date moves, you hear it from us first, and you can still refund.</p></li>
       </ul>
     </div>
@@ -211,7 +225,7 @@
       <details id="q-ship">
         <summary>When does it ship?<span class="chevron-wrap">{{> chevron}}</span></summary>
         <div class="answer">
-          <p>We’re aiming to ship {{shipDate}}. We manufacture in Shenzhen once pre-orders close, so the date depends on that run.</p>
+          <p>We’re aiming to ship {{shipDate}}. Production starts once pre-orders close, so the date depends on that run.</p>
           <p class="mt-3">If the date moves, you hear it from us first, and you can refund your deposit at any point.</p>
         </div>
       </details>
@@ -225,7 +239,13 @@
         <summary>What can the AI see and do on my phone?<span class="chevron-wrap">{{> chevron}}</span></summary>
         <div class="answer">
           <p>While it’s working on a task you gave it, boootie can see your screen and act on it: open apps, tap, type and scroll. It does what you asked and you watch it happen.</p>
-          <p class="mt-3">How much of that runs on the device versus on a server, and what gets stored, is not finalised yet. We’ll publish the details in plain language before launch. If you don’t like them, refund your deposit.</p>
+          <p class="mt-3">boootie is designed in Switzerland and built to Swiss data protection law and the EU’s GDPR. It only looks at your screen while doing something you asked, your data is never sold, and you can delete it anytime. We’ll publish the full details in plain language before launch.</p>
+        </div>
+      </details>
+      <details id="q-ai">
+        <summary>Which AI does it use?<span class="chevron-wrap">{{> chevron}}</span></summary>
+        <div class="answer">
+          <p>Your choice. Connect the Claude or ChatGPT subscription you already have, or pick any other model you prefer. boootie is the hands; you choose the brain.</p>
         </div>
       </details>
       <details id="q-app">
@@ -252,7 +272,7 @@
     <div class="md:col-span-7">
       <p class="brand" translate="no">boootie</p>
       <p class="mt-4 text-lg">Questions? <a class="font-bold underline" href="mailto:{{supportEmail}}">{{supportEmail}}</a></p>
-      <p class="fine mt-6 max-w-[60ch]">boootie is a pre-order. Deposits are refundable in full at any time before your order ships. Prices in USD. Ship dates are estimates and can move; if they do, you hear it from us first.</p>
+      <p class="fine mt-6 max-w-[60ch]">boootie is a pre-order. Deposits are refundable in full at any time before your order ships. Designed in Switzerland. Prices in USD. Ship dates are estimates and can move; if they do, you hear it from us first.</p>
       <p class="fine mt-4">&copy; {{year}} boootie</p>
     </div>
     <div class="max-w-[320px] md:col-span-5 md:justify-self-end">{{> scene-footer}}</div>

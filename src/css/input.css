@@ -167,3 +167,8 @@ a.underline:hover, footer a:hover { text-decoration-thickness: 3px; }
 #can, #object, #preorder, #faq, footer { content-visibility: auto; contain-intrinsic-size: auto 900px; }
 
 .figure video.fit-contain { object-fit: contain; background: #fff; }
+
+/* hand-marked strike-through on the after-launch retail price */
+.was { position: relative; display: inline-block; text-decoration: none; color: #555; margin-right: .15em; }
+.was .strike { position: absolute; left: -6%; top: 28%; width: 112%; height: 48%; overflow: visible; pointer-events: none; }
+.was .strike path { fill: none; stroke: #E5322D; stroke-width: 2; stroke-linecap: round; vector-effect: non-scaling-stroke; }

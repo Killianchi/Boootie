@@ -57,7 +57,7 @@
           <a id="hero-cta" data-cta="hero" class="btn btn-primary flex-1" href="{{stripeLink}}">{{cta}}</a>
           <div class="pointer-wrap" aria-hidden="true">{{> pointer-cta}}</div>
         </div>
-        <p class="fine mt-3">{{price}} at launch. Hold yours with a {{deposit}} deposit, fully refundable, anytime. Estimated to ship {{shipDate}}.</p>
+        <p class="fine mt-3"><s class="was" aria-label="{{retail}} retail price after launch">{{retail}}<svg class="strike" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M3 21 C 20 17, 38 14, 55 12 S 85 8, 97 7"/><path d="M6 25 C 28 19, 52 15, 95 11"/></svg></s> <strong>{{price}} launch price</strong> ({{retail}} after launch). Hold yours with a {{deposit}} deposit, fully refundable, anytime. Estimated to ship {{shipDate}}.</p>
       </div>
       <div class="relative px-3 md:col-span-6 md:px-6 lg:px-10">
         {{> halo}}
@@ -183,7 +183,7 @@
   <div class="wrap grid gap-8 md:grid-cols-12 md:gap-10">
     <div class="md:col-span-7">
       <h2 class="text-3xl md:text-5xl">Pre-order</h2>
-      <p class="mt-3 text-xl md:text-2xl">{{price}} at launch. Hold yours today with a {{deposit}} deposit.</p>
+      <p class="mt-3 text-xl md:text-2xl"><s class="was" aria-label="{{retail}} retail price after launch">{{retail}}<svg class="strike" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M3 21 C 20 17, 38 14, 55 12 S 85 8, 97 7"/><path d="M6 25 C 28 19, 52 15, 95 11"/></svg></s> <strong>{{price}}</strong> at launch, {{retail}} after. Hold yours today with a {{deposit}} deposit.</p>
       <ul class="mt-8 grid gap-6">
         <li class="flex gap-4"><span class="h-12 w-12 flex-none">{{> coin}}</span><p><strong>Pay a {{deposit}} deposit now.</strong> Fully refundable, anytime. No questions asked.</p></li>
         <li class="flex gap-4"><span class="h-12 w-12 flex-none">{{> box}}</span><p><strong>Designed in Switzerland, made once pre-orders close.</strong> You’ll hear from us as it progresses.</p></li>

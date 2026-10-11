@@ -22,6 +22,7 @@ const v = {
   stripeLink: stripeReady ? cfg.stripeLink : '#signup',
   holdLine: stripeReady ? `hold one for ${money(cfg.depositUsd)}` : 'deposits open soon',
   price: money(cfg.priceUsd),
+  retail: money(cfg.retailUsd),
   deposit: money(cfg.depositUsd),
   rest: money(cfg.priceUsd - cfg.depositUsd),
   headline: headlineHtml(cfg.headlines[cfg.headlineIndex] ?? cfg.headlines[0]),

@@ -19,5 +19,6 @@
   "supportEmail": "hello@boootie.com",
   "accent": "#D97757",
   "onAccent": "#000000",
-  "placeholders": "formspreeId and supportEmail are placeholders until confirmed."
+  "placeholders": "formspreeId and supportEmail are placeholders until confirmed.",
+  "retailUsd": 219
 }

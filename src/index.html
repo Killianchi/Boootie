@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<meta name="theme-color" content="#ffffff">
+<link rel="canonical" href="{{siteUrl}}/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{brand}}">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="{{siteUrl}}/">
+<meta property="og:image" content="{{ogImage}}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="boootie, a matte black wedge, inside a field of hand-drawn doodles. Let AI step into your phone.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{title}}">
+<meta name="twitter:description" content="{{description}}">
+<meta name="twitter:image" content="{{ogImage}}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://ajax.googleapis.com" crossorigin>
+<link rel="preload" href="/fonts/Figtree.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/img/poster.webp" as="image" fetchpriority="high">
+<link rel="stylesheet" href="/style.css">
+<style>:root{--accent:{{accent}};--on-accent:{{onAccent}}}</style>
+<script>document.documentElement.classList.replace('no-js','js')</script>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)}</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/main.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+{{> symbols}}
+
+<main id="main">
+
+<!-- 1. Hero: the dense doodle field, the copy on a sticker panel, the real object in a drawn ring -->
+<section class="hero min-h-[100dvh] md:min-h-0">
+  {{> hero-field-m}}
+  <template id="field-d">{{> hero-field-d}}</template>
+  <div class="hero-inner">
+    <header class="wrap flex h-16 items-center justify-between">
+      <a class="brand label-pill" href="/" aria-label="boootie, home" translate="no">boootie</a>
+      <button type="button" id="motion-toggle" class="motion-toggle label-pill" aria-pressed="false">Pause motion</button>
+    </header>
+    <div class="wrap grid items-center gap-8 pb-10 pt-2 md:grid-cols-12 md:gap-6 md:pb-20 md:pt-6 lg:pt-10">
+      <div class="sticker p-5 md:col-span-6 md:p-8 lg:col-span-6">
+        <h1 id="headline" data-headlines="{{headlinesJson}}" class="text-[40px] md:text-[52px] lg:text-[58px]">{{headline}}</h1>
+        <p class="mt-3 text-[17px] md:text-xl">{{subtext}}</p>
+        <div class="mt-5 flex items-center gap-2">
+          <a id="hero-cta" data-cta="hero" class="btn btn-primary flex-1" href="{{stripeLink}}">{{cta}}</a>
+          <div class="pointer-wrap" aria-hidden="true">{{> pointer-cta}}</div>
+        </div>
+        <p class="fine mt-3">{{price}} at launch. Hold yours with a {{deposit}} deposit, fully refundable, anytime. Estimated to ship {{shipDate}}.</p>
+      </div>
+      <div class="relative px-3 md:col-span-6 md:px-6 lg:px-10">
+        {{> halo}}
+        <div id="model" class="model-box" data-src="/models/boootie.glb" data-poster="/img/poster.webp" data-alt="boootie, a small matte black wedge with a USB-C plug. Drag to turn it.">
+          <img src="/img/poster.webp" width="1200" height="900" alt="boootie, a small matte black wedge with a USB-C plug" fetchpriority="high" decoding="async">
+        </div>
+        <p class="hand label-pill absolute -bottom-2 left-6 text-[22px] md:left-10 md:text-2xl">the real thing, 40&nbsp;x&nbsp;22&nbsp;mm</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. How it works -->
+<section id="how" class="relative pt-32 pb-16 md:pt-36 md:pb-24">
+  {{> band-how}}
+  <div class="wrap">
+    <h2 class="text-3xl md:text-5xl">How it works</h2>
+    <ol class="steps relative mt-10 grid gap-10 md:mt-14 md:grid-cols-3 md:gap-8">
+      {{> step-path}}
+      <li class="relative">
+        <div class="max-w-[260px]">{{> scene-plug}}</div>
+        <h3 class="mt-4 text-2xl">Plug it in</h3>
+        <p class="mt-2 max-w-[36ch]">boootie slots into the USB-C port on the bottom of your phone and sits flush with the screen.</p>
+      </li>
+      <li class="relative">
+        <div class="max-w-[260px]">{{> scene-say}}</div>
+        <h3 class="mt-4 text-2xl">Say what you want</h3>
+        <p class="mt-2 max-w-[36ch]">Book a table for Friday. Catch me up on the group chat. Get me a ride home. Just say it.</p>
+      </li>
+      <li class="relative">
+        <div class="max-w-[260px]">{{> scene-watch}}</div>
+        <h3 class="mt-4 text-2xl">Watch it happen</h3>
+        <p class="mt-2 max-w-[36ch]">boootie opens the apps, taps and types on your screen, right in front of your eyes.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- 3. What it can do -->
+<section id="can" class="relative pt-32 pb-16 md:pt-40 md:pb-24">
+  {{> band-tasks}}
+  <div class="wrap">
+    <h2 class="text-3xl md:text-5xl">Things you can ask for</h2>
+    <p class="mt-3 max-w-[48ch] text-lg">Three to start with. It works inside the apps already on your phone.</p>
+    <div class="mt-10 grid gap-5 md:mt-14 md:grid-cols-12 md:gap-6">
+      <article class="tile p-5 md:col-span-7 md:p-7">
+        <div class="mx-auto max-w-[340px]">{{> scene-table}}</div>
+        <p class="hand mt-4 text-[26px] md:text-[30px]">“Book us a table for four on Friday at eight.”</p>
+        <p class="mt-3 max-w-[44ch]">It opens your booking app, finds a free slot and reserves it.</p>
+      </article>
+      <article class="tile p-5 md:col-span-5 md:p-7">
+        <div class="mx-auto max-w-[300px]">{{> scene-chat}}</div>
+        <p class="hand mt-4 text-[26px] md:text-[30px]">“What did I miss in the family chat? Tell them I’m in.”</p>
+        <p class="mt-3 max-w-[44ch]">It reads the thread, tells you what happened and sends your reply.</p>
+      </article>
+      <article class="tile p-5 md:col-span-12 md:grid md:grid-cols-12 md:items-center md:gap-6 md:p-7">
+        <div class="mx-auto max-w-[320px] md:col-span-5">{{> scene-ride}}</div>
+        <div class="md:col-span-7">
+          <p class="hand mt-4 text-[26px] md:mt-0 md:text-[30px]">“Get me a ride home.”</p>
+          <p class="mt-3 max-w-[44ch]">It opens your ride app, sets home as the destination and orders the car.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 4. The object -->
+<section id="object" class="relative pt-32 pb-16 md:pt-40 md:pb-24">
+  {{> band-object}}
+  <div class="wrap">
+    <h2 class="text-3xl md:text-5xl">The object</h2>
+    <p class="mt-3 max-w-[48ch] text-lg">A slim matte black wedge. No lights, no battery, nothing to charge.</p>
+    <div class="mt-10 grid gap-5 md:mt-14 md:grid-cols-2 md:gap-6">
+      <figure class="figure">
+        <img src="/img/fig-top.webp" width="1200" height="900" loading="lazy" decoding="async" alt="boootie from above at an angle: a matte black wedge, 40 by 22 millimetres, with the boootie wordmark inlaid on top">
+        <p class="annot hand left-4 top-4"><span class="label-pill">40&nbsp;x&nbsp;22&nbsp;mm, matte black</span></p>
+        <p class="annot hand bottom-4 right-4">{{> arrow-label}}<span class="label-pill">glossy wordmark inlay, no lights</span></p>
+      </figure>
+      <figure class="figure">
+        <img src="/img/fig-edge.webp" width="1200" height="900" loading="lazy" decoding="async" alt="boootie in profile: as thick as a phone where the plug is, tapering to a 4.2 millimetre edge">
+        <p class="annot hand left-4 top-4"><span class="label-pill">as thick as your phone here</span></p>
+        <p class="annot hand bottom-4 right-4"><span class="label-pill">4.2&nbsp;mm here</span>{{> arrow-label-flip}}</p>
+      </figure>
+      <figure class="figure">
+        <img src="/img/fig-phone.webp" width="1200" height="900" loading="lazy" decoding="async" alt="boootie plugged into the bottom of a phone, its top flush with the screen. The screen shows a group chat with a reply being typed">
+        <p class="annot hand left-4 top-4"><span class="label-pill">sits flush with the screen</span></p>
+        <p class="annot hand bottom-4 left-4">{{> arrow-label}}<span class="label-pill">reads as part of the phone</span></p>
+      </figure>
+      <figure class="figure">
+        <img src="/img/fig-port.webp" width="1200" height="900" loading="lazy" decoding="async" alt="the far edge of boootie, with its second USB-C port for pass-through charging">
+        <p class="annot hand left-4 top-4"><span class="label-pill">second USB-C port</span></p>
+        <p class="annot hand bottom-4 right-4">{{> arrow-label}}<span class="label-pill">your charger plugs in here</span></p>
+      </figure>
+    </div>
+    <p class="mt-6 max-w-[60ch]">Pass-through charging: plug your charger into boootie and your phone keeps charging while it’s connected. boootie itself has no battery.</p>
+  </div>
+</section>
+
+<!-- 5. Pre-order -->
+<section id="preorder" class="relative pt-32 pb-16 md:pt-40 md:pb-24">
+  {{> band-preorder}}
+  <div class="wrap grid gap-8 md:grid-cols-12 md:gap-10">
+    <div class="md:col-span-7">
+      <h2 class="text-3xl md:text-5xl">Pre-order</h2>
+      <p class="mt-3 text-xl md:text-2xl">{{price}} at launch. Hold yours today with a {{deposit}} deposit.</p>
+      <ul class="mt-8 grid gap-6">
+        <li class="flex gap-4"><span class="h-12 w-12 flex-none">{{> coin}}</span><p><strong>Pay a {{deposit}} deposit now.</strong> Fully refundable, anytime. No questions asked.</p></li>
+        <li class="flex gap-4"><span class="h-12 w-12 flex-none">{{> box}}</span><p><strong>We manufacture in Shenzhen once pre-orders close.</strong> You’ll hear from us as it progresses.</p></li>
+        <li class="flex gap-4"><span class="h-12 w-12 flex-none">{{> check}}</span><p><strong>Pay the remaining {{rest}} when yours ships.</strong> Estimated {{shipDate}}. If the date moves, you hear it from us first, and you can still refund.</p></li>
+      </ul>
+    </div>
+    <div class="sticker p-5 md:col-span-5 md:p-7">
+      <p class="hand text-[26px]">hold one for {{deposit}}</p>
+      <a id="preorder-cta" data-cta="preorder" class="btn btn-primary mt-3 w-full" href="{{stripeLink}}">{{cta}}</a>
+      <p class="fine mt-3">{{deposit}} deposit, fully refundable, anytime. Estimated to ship {{shipDate}}.</p>
+      <hr class="my-6 border-0 border-t-[3px] border-black">
+      <p class="font-bold">Not ready? Get launch updates.</p>
+      <form id="signup" action="{{formAction}}" method="POST" data-support="{{supportEmail}}" novalidate>
+        <label for="email" class="fine mt-3 block font-bold">Email</label>
+        <input id="email" class="input mt-1" type="email" name="email" required autocomplete="email" inputmode="email" spellcheck="false" aria-describedby="signup-note">
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+        <input type="hidden" name="source" value="boootie.com">
+        <button class="btn btn-secondary mt-3 w-full" type="submit" data-label="Get launch updates">Get launch updates</button>
+        <p id="signup-note" class="form-note fine mt-3" role="status" aria-live="polite" hidden></p>
+        <p class="fine mt-3">One email when it ships, a couple before. Unsubscribe anytime.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- 6. FAQ -->
+<section id="faq" class="relative pt-32 pb-16 md:pt-40 md:pb-24">
+  {{> band-faq}}
+  <div class="wrap">
+    <h2 class="text-3xl md:text-5xl">Questions</h2>
+    <div class="faq mt-8 max-w-[760px] md:mt-12">
+      <details id="q-phones">
+        <summary>Which phones does it work with?<span class="chevron-wrap">{{> chevron}}</span></summary>
+        <div class="answer">
+          <p>boootie plugs into USB-C, so it’s built for phones with a USB-C port: recent Android phones and iPhones from the iPhone 15 onward.</p>
+          <p class="mt-3">We’re still finalising the exact list of supported models and will publish it before anyone pays the balance. If your phone turns out not to be supported, your deposit comes straight back.</p>
+        </div>
+      </details>
+      <details id="q-ship">
+        <summary>When does it ship?<span class="chevron-wrap">{{> chevron}}</span></summary>
+        <div class="answer">
+          <p>Our estimate is {{shipDate}}. We manufacture in Shenzhen once pre-orders close, so the date depends on that run.</p>
+          <p class="mt-3">If the date moves, you hear it from us first, and you can refund your deposit at any point.</p>
+        </div>
+      </details>
+      <details id="q-refund">
+        <summary>Can I get my deposit back?<span class="chevron-wrap">{{> chevron}}</span></summary>
+        <div class="answer">
+          <p>Yes. In full, at any time before your order ships, no questions asked. Reply to your receipt email or write to <a class="underline" href="mailto:{{supportEmail}}">{{supportEmail}}</a> and we refund it to the card you paid with.</p>
+        </div>
+      </details>
+      <details id="q-privacy">
+        <summary>What can the AI see and do on my phone?<span class="chevron-wrap">{{> chevron}}</span></summary>
+        <div class="answer">
+          <p>While it’s working on a task you gave it, boootie can see your screen and act on it: open apps, tap, type and scroll. It does what you asked and you watch it happen.</p>
+          <p class="mt-3">How much of that runs on the device versus on a server, and what gets stored, is not finalised yet. We’ll publish the details in plain language before launch. If you don’t like them, refund your deposit.</p>
+        </div>
+      </details>
+      <details id="q-app">
+        <summary>Does it need an app?<span class="chevron-wrap">{{> chevron}}</span></summary>
+        <div class="answer">
+          <p>Probably a small one, for setup. We haven’t locked this down yet; we’ll tell you before launch.</p>
+        </div>
+      </details>
+      <details id="q-charge">
+        <summary>Does it charge my phone?<span class="chevron-wrap">{{> chevron}}</span></summary>
+        <div class="answer">
+          <p>No. boootie has no battery of its own. It has a second USB-C port, so you can plug your usual charger into boootie and your phone keeps charging while boootie is connected.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- 7. Footer -->
+<footer class="relative border-t-[3px] border-black">
+  <div class="wrap grid gap-8 py-12 md:grid-cols-12 md:py-16">
+    <div class="md:col-span-7">
+      <p class="brand" translate="no">boootie</p>
+      <p class="mt-4 text-lg">Questions? <a class="font-bold underline" href="mailto:{{supportEmail}}">{{supportEmail}}</a></p>
+      <p class="fine mt-6 max-w-[60ch]">boootie is a pre-order. Deposits are refundable in full at any time before your order ships. Prices in USD. Ship dates are estimates and can move; if they do, you hear it from us first.</p>
+      <p class="fine mt-4">&copy; {{year}} boootie</p>
+    </div>
+    <div class="max-w-[320px] md:col-span-5 md:justify-self-end">{{> scene-footer}}</div>
+  </div>
+</footer>
+
+<div id="sticky-cta" class="sticky-cta" aria-hidden="true">
+  <div class="flex items-center gap-3">
+    <p class="fine min-w-0 flex-1 text-[13px] leading-snug"><strong>{{deposit}} deposit</strong>, fully refundable, anytime. Ships est. {{shipDate}}.</p>
+    <a data-cta="sticky" class="btn btn-primary" href="{{stripeLink}}" tabindex="-1">{{cta}}</a>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+<svg class="scene doodle pending" viewBox="0 0 240 200" aria-hidden="true" focusable="false"><ellipse cx="120" cy="100" rx="120" ry="100" fill="#fff"/><g class="dp draw" transform="translate(120 100) rotate(3)" style="--d:0.1s"><use href="#d-phone-tap" width="150" height="150" x="-75" y="-75" stroke-width="2"/></g>
+<g class="dp draw" transform="translate(46 60) rotate(12)" style="--d:0.5s"><use href="#d-sparkle" width="44" height="44" x="-22" y="-22" stroke-width="6.8"/></g>
+<g class="dp draw" transform="translate(198 150) rotate(0)" style="--d:0.8s"><use href="#d-check" width="54" height="54" x="-27" y="-27" stroke-width="5.6"/></g>
+<g class="dp draw" transform="translate(206 54) rotate(-10)" style="--d:1s"><use href="#d-sparkle-sm" width="26" height="26" x="-13" y="-13" stroke-width="11.5"/></g></svg>

@@ -1,0 +1,16 @@
+<svg class="band doodle pending" viewBox="0 0 1440 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#d-sparkle" width="48.4" height="48.4" x="-24.2" y="-24.2" stroke-width="5.8" class="dp fade" transform="translate(203.8 62.5) rotate(-1.8)" style="--d:0.92s"/>
+<use href="#d-check" width="55.9" height="55.9" x="-28" y="-28" stroke-width="5" class="dp fade" transform="translate(460.1 81.2) rotate(10.5)" style="--d:0.94s"/>
+<use href="#d-plane" width="63.9" height="63.9" x="-32" y="-32" stroke-width="4.4" class="dp fade" transform="translate(745.5 69.7) rotate(15.4)" style="--d:1.02s"/>
+<use href="#d-check" width="56.9" height="56.9" x="-28.5" y="-28.5" stroke-width="4.9" class="dp fade" transform="translate(803.1 66.4) rotate(-4.1)" style="--d:0.2s"/>
+<use href="#d-coin" width="64" height="64" x="-32" y="-32" stroke-width="4.4" class="dp fade" transform="translate(980.1 63.6) rotate(-5.1)" style="--d:1.29s"/>
+<use href="#d-heart" width="34.5" height="34.5" x="-17.2" y="-17.2" stroke-width="8.1" class="dp fade" transform="translate(328.7 26.6) rotate(13.5)" style="--d:0.33s"/>
+<use href="#d-heart" width="33.1" height="33.1" x="-16.5" y="-16.5" stroke-width="8.5" class="dp fade" transform="translate(366 30.6) rotate(-10.9)" style="--d:1.04s"/>
+<use href="#d-sparkle-sm" width="22.3" height="22.3" x="-11.2" y="-11.2" stroke-width="12.6" class="dp fade" transform="translate(544.3 31.7) rotate(0.7)" style="--d:0.4s"/>
+<use href="#d-smiley" width="31.1" height="31.1" x="-15.6" y="-15.6" stroke-width="9" class="dp fade" transform="translate(829.5 30.4) rotate(-15.4)" style="--d:0.12s"/>
+<use href="#d-dash-3" width="29.7" height="29.7" x="-14.8" y="-14.8" stroke-width="9.4" class="dp fade" transform="translate(1098.5 34.2) rotate(-17.2)" style="--d:0.73s"/>
+<use href="#d-star" width="29.5" height="29.5" x="-14.8" y="-14.8" stroke-width="9.5" class="dp fade" transform="translate(577.9 76.3) rotate(6)" style="--d:0.66s"/>
+<use href="#d-sparkle-sm" width="32.7" height="32.7" x="-16.4" y="-16.4" stroke-width="8.6" class="dp fade" transform="translate(879.2 66.3) rotate(-14.8)" style="--d:0.75s"/>
+<use href="#d-star" width="26" height="26" x="-13" y="-13" stroke-width="10.8" class="dp fade" transform="translate(1132.1 84.6) rotate(13.1)" style="--d:0.21s"/>
+<use href="#d-dash-3" width="34.4" height="34.4" x="-17.2" y="-17.2" stroke-width="8.1" class="dp fade" transform="translate(95.7 104.3) rotate(-17.7)" style="--d:0.07s"/>
+<use href="#d-dash-3" width="34.2" height="34.2" x="-17.1" y="-17.1" stroke-width="8.2" class="dp fade" transform="translate(204.5 120.6) rotate(6)" style="--d:1.29s"/>
+<use href="#d-squiggle" width="30.9" height="30.9" x="-15.4" y="-15.4" stroke-width="9.1" class="dp fade" transform="translate(1090.8 107.2) rotate(-7.2)" style="--d:1.17s"/></svg>

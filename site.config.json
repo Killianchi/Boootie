@@ -1,0 +1,27 @@
+{
+  "siteUrl": "https://boootie.com",
+  "brand": "boootie",
+  "title": "boootie: let AI step into your phone",
+  "description": "boootie is a small matte black USB-C device that plugs into the bottom of your phone and lets AI open apps, tap and type for you. Pre-order with a refundable deposit.",
+
+  "headlines": [
+    "Let AI [step] into your phone.",
+    "Your phone, on [autopilot].",
+    "Say it. boootie [does it]."
+  ],
+  "headlineIndex": 0,
+  "subtext": "Plug in boootie, say what you need, and watch it open apps, tap and type for you.",
+  "cta": "Reserve yours",
+
+  "priceUsd": 139,
+  "depositUsd": 29,
+  "stripeLink": "https://buy.stripe.com/REPLACE_ME",
+  "shipDate": "spring 2027",
+  "formspreeId": "REPLACE_ME",
+  "supportEmail": "hello@boootie.com",
+
+  "accent": "#B9A1F3",
+  "onAccent": "#000000",
+
+  "placeholders": "depositUsd, stripeLink, shipDate, formspreeId and supportEmail are placeholders until confirmed."
+}

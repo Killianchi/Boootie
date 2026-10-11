@@ -1,0 +1,5 @@
+<svg class="scene doodle pending" viewBox="0 0 240 200" aria-hidden="true" focusable="false"><ellipse cx="120" cy="100" rx="120" ry="100" fill="#fff"/><g class="dp draw" transform="translate(120 78) rotate(-4)" style="--d:0.1s"><use href="#d-phone" width="130" height="130" x="-65" y="-65" stroke-width="2.3"/></g>
+<g class="dp draw" transform="translate(120 168) rotate(0)" style="--d:0.4s"><use href="#d-usbc" width="64" height="64" x="-32" y="-32" stroke-width="4.7"/></g>
+<g class="dp draw" transform="translate(172 128) rotate(180)" style="--d:0.7s"><use href="#d-arrow-down" width="40" height="40" x="-20" y="-20" stroke-width="7.5"/></g>
+<g class="dp draw" transform="translate(48 48) rotate(10)" style="--d:0.9s"><use href="#d-sparkle-sm" width="30" height="30" x="-15" y="-15" stroke-width="10"/></g>
+<g class="dp draw" transform="translate(196 36) rotate(-15)" style="--d:1s"><use href="#d-sparkle-sm" width="24" height="24" x="-12" y="-12" stroke-width="12.5"/></g></svg>

@@ -1,0 +1,20 @@
+<svg class="band doodle pending" viewBox="0 0 1440 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#d-usbc" width="54.1" height="54.1" x="-27.1" y="-27.1" stroke-width="5.2" class="dp fade" transform="translate(58.9 64.2) rotate(-0.3)" style="--d:0.69s"/>
+<use href="#d-sparkle" width="44" height="44" x="-22" y="-22" stroke-width="6.4" class="dp fade" transform="translate(132.9 73.4) rotate(-3.2)" style="--d:0.69s"/>
+<use href="#d-pocket" width="52.4" height="52.4" x="-26.2" y="-26.2" stroke-width="5.3" class="dp fade" transform="translate(388.5 70.7) rotate(1.3)" style="--d:0.26s"/>
+<use href="#d-boot" width="60.2" height="60.2" x="-30.1" y="-30.1" stroke-width="4.7" class="dp fade" transform="translate(802.1 81.4) rotate(-6.8)" style="--d:0.74s"/>
+<use href="#d-sparkle" width="61.6" height="61.6" x="-30.8" y="-30.8" stroke-width="4.5" class="dp fade" transform="translate(980.8 60.2) rotate(16.4)" style="--d:0.27s"/>
+<use href="#d-cable" width="44.4" height="44.4" x="-22.2" y="-22.2" stroke-width="6.3" class="dp fade" transform="translate(1062 85.6) rotate(3.4)" style="--d:0.03s"/>
+<use href="#d-phone" width="62.3" height="62.3" x="-31.1" y="-31.1" stroke-width="4.5" class="dp fade" transform="translate(1242.8 62) rotate(-12.8)" style="--d:0.61s"/>
+<use href="#d-star" width="22.9" height="22.9" x="-11.4" y="-11.4" stroke-width="12.2" class="dp fade" transform="translate(23.9 29.4) rotate(17.5)" style="--d:0.08s"/>
+<use href="#d-dots-3" width="32.6" height="32.6" x="-16.3" y="-16.3" stroke-width="8.6" class="dp fade" transform="translate(107.8 31.3) rotate(1.8)" style="--d:0.61s"/>
+<use href="#d-heart" width="30.1" height="30.1" x="-15.1" y="-15.1" stroke-width="9.3" class="dp fade" transform="translate(159.5 36.3) rotate(-12.5)" style="--d:0.98s"/>
+<use href="#d-dots" width="33.9" height="33.9" x="-17" y="-17" stroke-width="8.3" class="dp fade" transform="translate(201.9 28.8) rotate(8.1)" style="--d:1.37s"/>
+<use href="#d-dots" width="22.5" height="22.5" x="-11.2" y="-11.2" stroke-width="12.5" class="dp fade" transform="translate(579.2 36.1) rotate(-3.3)" style="--d:1.21s"/>
+<use href="#d-heart" width="33.7" height="33.7" x="-16.8" y="-16.8" stroke-width="8.3" class="dp fade" transform="translate(625.3 42.1) rotate(8.3)" style="--d:0.07s"/>
+<use href="#d-star" width="32.5" height="32.5" x="-16.3" y="-16.3" stroke-width="8.6" class="dp fade" transform="translate(718.6 41.5) rotate(-17.6)" style="--d:1.3s"/>
+<use href="#d-squiggle" width="34.5" height="34.5" x="-17.2" y="-17.2" stroke-width="8.1" class="dp fade" transform="translate(849.1 36) rotate(15.8)" style="--d:0.96s"/>
+<use href="#d-dots-3" width="24.1" height="24.1" x="-12.1" y="-12.1" stroke-width="11.6" class="dp fade" transform="translate(1133 45.2) rotate(-16.1)" style="--d:0.82s"/>
+<use href="#d-dots-3" width="29.4" height="29.4" x="-14.7" y="-14.7" stroke-width="9.5" class="dp fade" transform="translate(1399 71.5) rotate(5.8)" style="--d:0.66s"/>
+<use href="#d-squiggle" width="34.2" height="34.2" x="-17.1" y="-17.1" stroke-width="8.2" class="dp fade" transform="translate(1439.1 72.5) rotate(-0.9)" style="--d:0.17s"/>
+<use href="#d-heart" width="34.5" height="34.5" x="-17.3" y="-17.3" stroke-width="8.1" class="dp fade" transform="translate(153.3 102.3) rotate(-18)" style="--d:0.09s"/>
+<use href="#d-sparkle-sm" width="33.6" height="33.6" x="-16.8" y="-16.8" stroke-width="8.3" class="dp fade" transform="translate(365.9 113.6) rotate(-2.9)" style="--d:1.19s"/></svg>

@@ -1,0 +1,4 @@
+<svg class="halo doodle" viewBox="0 0 400 320" aria-hidden="true" focusable="false">
+<ellipse cx="200" cy="160" rx="188" ry="146" fill="#fff" transform="rotate(-6 200 160)"/>
+<g class="dp draw halo-line" transform="translate(200 160) rotate(-6)"><use href="#d-circle" width="396" height="396" x="-198" y="-198" stroke-width="0.8"/></g>
+</svg>

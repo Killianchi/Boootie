@@ -1,0 +1,11 @@
+<svg class="band doodle pending" viewBox="0 0 1440 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#d-calendar" width="63.4" height="63.4" x="-31.7" y="-31.7" stroke-width="4.4" class="dp fade" transform="translate(722.6 78.6) rotate(-13.6)" style="--d:1.12s"/>
+<use href="#d-cocktail" width="44.2" height="44.2" x="-22.1" y="-22.1" stroke-width="6.3" class="dp fade" transform="translate(886.7 62.9) rotate(1.4)" style="--d:1.09s"/>
+<use href="#d-pin" width="51.5" height="51.5" x="-25.8" y="-25.8" stroke-width="5.4" class="dp fade" transform="translate(1063.5 77.3) rotate(1.7)" style="--d:0.88s"/>
+<use href="#d-pizza" width="62.3" height="62.3" x="-31.2" y="-31.2" stroke-width="4.5" class="dp fade" transform="translate(1321.7 62.2) rotate(-11.8)" style="--d:1.05s"/>
+<use href="#d-dash-3" width="22.8" height="22.8" x="-11.4" y="-11.4" stroke-width="12.3" class="dp fade" transform="translate(659.1 37.2) rotate(5)" style="--d:0.22s"/>
+<use href="#d-heart" width="32.9" height="32.9" x="-16.5" y="-16.5" stroke-width="8.5" class="dp fade" transform="translate(1065.8 35.7) rotate(-13.4)" style="--d:0.14s"/>
+<use href="#d-star" width="34.5" height="34.5" x="-17.2" y="-17.2" stroke-width="8.1" class="dp fade" transform="translate(611.7 84.7) rotate(13.3)" style="--d:0.76s"/>
+<use href="#d-dots-3" width="32" height="32" x="-16" y="-16" stroke-width="8.8" class="dp fade" transform="translate(675.7 74) rotate(15.7)" style="--d:1.33s"/>
+<use href="#d-smiley" width="34.3" height="34.3" x="-17.2" y="-17.2" stroke-width="8.2" class="dp fade" transform="translate(372 116.9) rotate(-12.7)" style="--d:1.29s"/>
+<use href="#d-squiggle" width="32.9" height="32.9" x="-16.5" y="-16.5" stroke-width="8.5" class="dp fade" transform="translate(929.8 115.3) rotate(10.3)" style="--d:0.77s"/>
+<use href="#d-heart" width="26.2" height="26.2" x="-13.1" y="-13.1" stroke-width="10.7" class="dp fade" transform="translate(1060.3 118.6) rotate(1.8)" style="--d:0.5s"/></svg>

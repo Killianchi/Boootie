@@ -162,7 +162,7 @@ const stills = {
   'fig-phone': { w: 1600, h: 1200, yaw: 24, pitch: 12, dist: 0.3, fov: 24, target: '0,0.052,0', scene: 'phone', shadow: 0.2, floor: 0, exp: 0.9, shadowOpacity: 0.12 },
 };
 const sequences = {
-  turntable: { w: 1200, h: 900, yaw: 0, pitch: 26, dist: 0.1, fov: 20, frames: 72, roll: 32 },
+  turntable: { w: 1200, h: 900, yaw: 0, pitch: 26, dist: 0.1, fov: 20, frames: 240, roll: 32 },
   plugin: { w: 1200, h: 900, yaw: 24, pitch: 12, dist: 0.3, fov: 24, target: '0,0.045,0', scene: 'phone', shadow: 0.2, floor: 0, exp: 0.9, shadowOpacity: 0.12, frames: 72 },
 };
 const only = process.argv.slice(2);

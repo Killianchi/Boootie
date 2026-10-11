@@ -18,8 +18,8 @@ for (const name of names) {
   if (!existsSync(`${root}renders/${name}/frame-000.png`)) { console.log('no frames for', name); continue; }
   const fps = 24;
   const mp4 = `${root}public/img/${name}.mp4`, webm = `${root}public/img/${name}.webm`, gif = `${root}exports/${name}.gif`;
-  run(['-framerate', String(fps), '-i', frames, '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '23', '-preset', 'slow', '-movflags', '+faststart', '-vf', 'scale=1200:-2', mp4]);
-  run(['-framerate', String(fps), '-i', frames, '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', '34', '-row-mt', '1', '-pix_fmt', 'yuv420p', '-vf', 'scale=1200:-2', webm]);
+  run(['-framerate', String(fps), '-i', frames, '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '27', '-preset', 'slow', '-movflags', '+faststart', '-vf', 'scale=1200:-2', mp4]);
+  run(['-framerate', String(fps), '-i', frames, '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', '38', '-row-mt', '1', '-pix_fmt', 'yuv420p', '-vf', 'scale=1200:-2', webm]);
   // a sharable GIF: 720 px wide, palette tuned to the frames
   run(['-framerate', String(fps), '-i', frames, '-vf', 'fps=18,scale=720:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=128:stats_mode=diff[p];[b][p]paletteuse=dither=sierra2_4a', '-loop', '0', gif]);
   await sharp(`${root}renders/${name}/frame-000.png`).resize(1200, 900, { fit: 'inside' }).webp({ quality: 84 }).toFile(`${root}public/img/${name}-poster.webp`);

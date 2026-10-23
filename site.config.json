@@ -14,7 +14,7 @@
   "priceUsd": 139,
   "depositUsd": 29,
   "stripeLink": "https://buy.stripe.com/5kQbJ28xD0Fw48Cdkb38400",
-  "shipDate": "before Christmas",
+  "shipDate": "",
   "formspreeId": "REPLACE_ME",
   "supportEmail": "hello@boootie.com",
   "accent": "#D97757",

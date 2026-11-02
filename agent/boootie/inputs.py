@@ -287,7 +287,8 @@ class CuaInput:
         return ok, out, "cli"
 
     def _target(self, win) -> dict:
-        args = {"pid": win.pid, "window_id": win.id, "session": self.session, "post_action_wait": "none"}
+        # (no "post_action_wait": the installed Cua Driver rejected it on a real Mac)
+        args = {"pid": win.pid, "window_id": win.id, "session": self.session}
         if self.delivery != "background":
             args["delivery_mode"] = self.delivery
         return args

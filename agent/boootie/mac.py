@@ -248,12 +248,30 @@ KEYCODES = {
     "escape": 53, "esc": 53, "left": 123, "right": 124, "down": 125, "up": 126,
 }
 SHIFTED = dict(zip('~!@#$%^&*()_+{}|:"<>?', "`1234567890-=[]\\;',./"))
+MODIFIER_KEYCODES = {"cmd": 55, "shift": 56}
+
+
+def _modifier(code: int, down: bool, flags: int) -> None:
+    ev = Quartz.CGEventCreateKeyboardEvent(None, code, down)
+    Quartz.CGEventSetFlags(ev, flags)
+    _post(ev)
+    time.sleep(0.012)
 
 
 def key(name: str, cmd: bool = False, shift: bool = False, text: str | None = None) -> None:
-    """Press and release one key, optionally with Cmd/Shift."""
+    """Press and release one key, optionally with Cmd/Shift.
+
+    The modifier keys themselves are pressed around the key: iPhone Mirroring ignores
+    flags on the key event when forwarding to the phone, so Shift+2 would arrive as "2".
+    """
     code = KEYCODES[name]
-    flags = (Quartz.kCGEventFlagMaskCommand if cmd else 0) | (Quartz.kCGEventFlagMaskShift if shift else 0)
+    mods = [(MODIFIER_KEYCODES["cmd"], Quartz.kCGEventFlagMaskCommand)] if cmd else []
+    if shift:
+        mods.append((MODIFIER_KEYCODES["shift"], Quartz.kCGEventFlagMaskShift))
+    flags = 0
+    for mod_code, mask in mods:
+        flags |= mask
+        _modifier(mod_code, True, flags)
     for down in (True, False):
         ev = Quartz.CGEventCreateKeyboardEvent(None, code, down)
         Quartz.CGEventSetFlags(ev, flags)
@@ -261,6 +279,9 @@ def key(name: str, cmd: bool = False, shift: bool = False, text: str | None = No
             Quartz.CGEventKeyboardSetUnicodeString(ev, len(text), text)
         _post(ev)
         time.sleep(0.012)
+    for mod_code, mask in reversed(mods):
+        flags &= ~mask
+        _modifier(mod_code, False, flags)
 
 
 def can_type_with_keys(ch: str) -> bool:

@@ -1,6 +1,7 @@
 """Milestone 2: test input directly, without Claude.
 
     uv run scripts/m2_input.py corners          move the cursor to the 4 corners + centre (no clicks)
+    uv run scripts/m2_input.py focus            bring iPhone Mirroring to the front (needed before typing)
     uv run scripts/m2_input.py center           tap the centre of the screen
     uv run scripts/m2_input.py tap X Y          tap a point (pixels in screenshot.png)
     uv run scripts/m2_input.py swipe            swipe left, then right (home screen pages)
@@ -23,7 +24,7 @@ from boootie.phone import Phone
 
 def corners(phone: Phone) -> None:
     img, frame, win = phone.grab()
-    phone.b.activate(win)
+    phone.b.activate(win, required=False)
     W, H = frame.img_w, frame.img_h
     for name, (x, y) in {"top-left": (4, 4), "top-right": (W - 4, 4), "bottom-right": (W - 4, H - 4),
                          "bottom-left": (4, H - 4), "centre": (W / 2, H / 2)}.items():
@@ -32,6 +33,17 @@ def corners(phone: Phone) -> None:
         phone.b.move(sx, sy)
         time.sleep(1.2)
     print("The cursor should have sat exactly on each corner of the phone screen (not the title bar).")
+
+
+def focus(phone: Phone) -> None:
+    win = phone.grab()[2]
+    print(f"  iPhone Mirroring pid {win.pid}; frontmost pid before: {phone.b._frontmost_pid()}")
+    try:
+        phone.b.activate(win)
+        print("  OK: iPhone Mirroring is frontmost")
+    except RuntimeError as e:
+        print(f"  FAILED: {e}")
+    print(f"  frontmost pid after: {phone.b._frontmost_pid()}")
 
 
 def main() -> None:
@@ -46,6 +58,7 @@ def main() -> None:
 
     steps = {
         "corners": lambda: corners(phone),
+        "focus": lambda: focus(phone),
         "center": lambda: phone.tap(W / 2, H / 2),
         "tap": lambda: phone.tap(float(rest[0]), float(rest[1])),
         "swipe": lambda: (phone.swipe(W * 0.8, H / 2, W * 0.2, H / 2), phone.swipe(W * 0.2, H / 2, W * 0.8, H / 2)),

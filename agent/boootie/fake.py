@@ -51,7 +51,7 @@ def capture(win: Window) -> Image.Image:
     return img
 
 
-def activate(win: Window) -> None:
+def activate(win: Window, required: bool = True) -> None:
     pass
 
 

@@ -87,9 +87,11 @@ class Phone:
 
     # ------------------------------------------------------------ acting
 
-    def _act(self, tool: str, args: dict, plan: Callable[[Frame], tuple[list[dict], Callable[[], None]]]) -> Image.Image:
+    def _act(self, tool: str, args: dict, plan: Callable[[Frame], tuple[list[dict], Callable[[], None]]],
+             keys: bool = False) -> Image.Image:
         """Shared wrapper for every action: kill switch, fresh frame, draw target,
-        perform (unless dry run), settle, log."""
+        perform (unless dry run), settle, log. `keys`: the action types, so the window
+        must be confirmed frontmost first."""
         t0 = time.monotonic()
         i = self.log.next()
         entry: dict = {"i": i, "tool": tool, "args": args, "dry_run": self.dry_run}
@@ -102,7 +104,7 @@ class Phone:
             entry["frame"] = self.log.save(draw_marks(before, marks), f"{i:03d}_{tool}.png")
             if self.dry_run:
                 return before
-            self.b.activate(win)
+            self.b.activate(win, required=keys)
             killswitch.check()
             do()
             after, entry["settle_ms"] = self.settle()
@@ -215,7 +217,7 @@ class Phone:
         def plan(f):
             return [{"kind": "text", "text": f"type: {text}"}], lambda: self._type(text, method)
 
-        return self._act("type_text", {"text": text, "method": method}, plan)
+        return self._act("type_text", {"text": text, "method": method}, plan, keys=True)
 
     def press_key(self, key: str) -> Image.Image:
         key = key.lower().strip()
@@ -225,13 +227,13 @@ class Phone:
         def plan(f):
             return [{"kind": "text", "text": f"key: {key}"}], lambda: self.b.key(key)
 
-        return self._act("press_key", {"key": key}, plan)
+        return self._act("press_key", {"key": key}, plan, keys=True)
 
     def _shortcut(self, tool: str, digit: str) -> Image.Image:
         def plan(f):
             return [{"kind": "text", "text": f"{tool} (Cmd+{digit})"}], lambda: self.b.key(digit, cmd=True)
 
-        return self._act(tool, {}, plan)
+        return self._act(tool, {}, plan, keys=True)
 
     # iPhone Mirroring menu shortcuts: View > Home Screen / App Switcher / Spotlight.
     def home(self) -> Image.Image:
@@ -250,7 +252,7 @@ class Phone:
 
             return [{"kind": "text", "text": f"spotlight: {query}"}], do
 
-        return self._act("spotlight", {"query": query}, plan)
+        return self._act("spotlight", {"query": query}, plan, keys=True)
 
 
 def changed_fraction(a: Image.Image, b: Image.Image) -> float:

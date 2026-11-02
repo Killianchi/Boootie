@@ -111,29 +111,63 @@ def capture(win: Window) -> Image.Image:
 
 
 def _frontmost_pid() -> int | None:
-    front = NSWorkspace.sharedWorkspace().frontmostApplication()
-    return int(front.processIdentifier()) if front is not None else None
+    """Owner of the frontmost normal window, from the live window list.
+
+    (NSWorkspace.frontmostApplication is not used: in a process without a running
+    AppKit event loop, like this one, it can keep returning a stale answer.)
+    """
+    infos = Quartz.CGWindowListCopyWindowInfo(
+        Quartz.kCGWindowListOptionOnScreenOnly | Quartz.kCGWindowListExcludeDesktopElements,
+        Quartz.kCGNullWindowID,
+    )
+    for w in infos or []:  # ordered front to back
+        b = w.get("kCGWindowBounds", {})
+        if (w.get("kCGWindowLayer", 0) == 0 and w.get("kCGWindowAlpha", 1) > 0
+                and b.get("Width", 0) > 50 and b.get("Height", 0) > 50):
+            return int(w["kCGWindowOwnerPID"])
+    return None
 
 
-def activate(win: Window) -> None:
+def _wait_front(pid: int, seconds: float) -> bool:
+    end = time.monotonic() + seconds
+    while time.monotonic() < end:
+        if _frontmost_pid() == pid:
+            return True
+        time.sleep(0.05)
+    return False
+
+
+def activate(win: Window, required: bool = True) -> None:
     """Bring iPhone Mirroring to the front so it receives keyboard events.
 
-    macOS 14+ may ignore activation requests from background processes, so check
-    and fall back to `open -b`, which goes through LaunchServices and is honoured.
+    Tries, in order: NSRunningApplication.activate, `open -b` (LaunchServices), and a
+    click on the window's black border beside the phone screen (focuses the window
+    without touching the phone). `required=False` is for mouse-only actions, where
+    the click itself focuses the window anyway.
     """
     if _frontmost_pid() == win.pid:
         return
     app = NSRunningApplication.runningApplicationWithProcessIdentifier_(win.pid)
     if app is not None:
         app.activateWithOptions_(NSApplicationActivateIgnoringOtherApps)
-    for attempt in range(10):
+    if _wait_front(win.pid, 0.3):
+        return
+    subprocess.run(["open", "-b", BUNDLE_ID], capture_output=True)
+    if _wait_front(win.pid, 0.5):
+        return
+    b = win.bounds
+    x, y = b.x + 3, b.y + b.h / 2  # left border, outside the phone screen
+    move(x, y)
+    time.sleep(0.05)
+    mouse_down(x, y)
+    mouse_up(x, y)
+    if _wait_front(win.pid, 0.5) or not required:
         time.sleep(0.1)
-        if _frontmost_pid() == win.pid:
-            time.sleep(0.15)
-            return
-        if attempt == 2:
-            subprocess.run(["open", "-b", BUNDLE_ID], capture_output=True)
-    raise RuntimeError("Could not bring iPhone Mirroring to the front; keystrokes would go to the wrong app.")
+        return
+    raise RuntimeError(
+        "Could not bring iPhone Mirroring to the front; keystrokes would go to the wrong app. "
+        "Click the iPhone Mirroring window once and try again."
+    )
 
 
 # ---------------------------------------------------------------- permissions

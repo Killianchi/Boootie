@@ -2,9 +2,11 @@
 
     uv run scripts/mcp_smoke.py            against the fake phone (works anywhere)
     uv run scripts/mcp_smoke.py --dry-run  against the real phone, without touching it
+    uv run scripts/mcp_smoke.py --fake --input cua   any server options can be passed
 """
 
 import asyncio
+import os
 import sys
 
 from mcp import ClientSession, StdioServerParameters
@@ -12,8 +14,9 @@ from mcp.client.stdio import stdio_client
 
 
 async def main() -> None:
-    flag = "--dry-run" if "--dry-run" in sys.argv else "--fake"
-    params = StdioServerParameters(command=sys.executable, args=["-m", "boootie.server", flag])
+    flags = sys.argv[1:] or ["--fake"]
+    params = StdioServerParameters(command=sys.executable, args=["-m", "boootie.server", *flags],
+                                    env=dict(os.environ))
     async with stdio_client(params) as (r, w), ClientSession(r, w) as s:
         init = await s.initialize()
         print("server:", init.server_info.name, "| instructions:", len(init.instructions or ""), "chars")

@@ -74,6 +74,33 @@ Use absolute paths, since the desktop app doesn't see your shell's PATH (`which 
 Restart Claude Desktop. Give **Claude.app** Screen Recording and Accessibility too:
 it is the app that launches the server there, so your terminal's permissions don't apply.
 
+## Two cursors: background input + the AI's iOS pointer (experimental)
+By default boootie moves your real pointer. With `--input cua` it sends input through
+[Cua Driver](https://github.com/trycua/cua) (open source, MIT) straight to the iPhone Mirroring
+process instead, so **your pointer stays yours** and the window doesn't need to be in front.
+The AI gets its own pointer, drawn like the iOS AssistiveTouch one: a translucent grey disc that
+glides to each target, shrinks when it taps, and fades when idle. It's only a picture and clicks
+pass through it.
+
+Whether iPhone Mirroring accepts background events is what we're testing. If taps don't land,
+try `BOOOTIE_CUA_DELIVERY=foreground` (briefly fronts the window per action), or go back to the
+default `--input system`.
+
+```bash
+/bin/bash -c "$(curl -fsSL https://cua.ai/driver/install.sh)"   # install Cua Driver
+cua-driver permissions grant      # switch on Accessibility + Screen Recording for CuaDriver
+cua-driver status                 # should say the daemon is running
+
+uv run scripts/m2_input.py cursor --input cua      # only animate the AI pointer, no input
+uv run scripts/m2_input.py home --input cua        # Cmd+1 in the background
+uv run scripts/m2_input.py center --input cua      # tap without moving your pointer
+uv run scripts/m2_input.py spotlight Settings --input cua
+
+claude mcp add boootie-cua -- uv run --directory "$PWD" boootie-mcp --input cua
+```
+`--ios-cursor` also shows the AI pointer with the default input (and in `--dry-run`, as a preview
+of where it would tap). `--no-ios-cursor` hides it.
+
 ## Tools
 `screenshot`, `tap(x,y)`, `long_press(x,y)`, `swipe(x1,y1,x2,y2)`, `scroll(direction, amount)`,
 `type_text(text)`, `press_key(enter|backspace|escape|…)`, `home()` (Cmd+1),
@@ -109,6 +136,9 @@ Without a Mac: `uv run pytest` and `uv run scripts/mcp_smoke.py` use a fake phon
 | `BOOOTIE_TOP_INSET` | auto | top edge of the phone screen (points from the window top) if the auto crop is wrong |
 | `BOOOTIE_ASPECT` | 2556/1179 | phone height/width (e.g. 1.778 for an iPhone SE) |
 | `BOOOTIE_SCROLL_INVERT` | off | set to 1 if `scroll("down")` goes up |
+| `BOOOTIE_INPUT` | system | `cua` = background input via Cua Driver (same as `--input cua`) |
+| `BOOOTIE_CUA_DELIVERY` | background | `foreground` if background events don't reach iPhone Mirroring |
+| `BOOOTIE_CUA_BIN` | auto | path to `cua-driver` if it isn't found |
 
 ## Known limits
 - iPhone Mirroring only works while the phone is **locked**. Unlocking it pauses

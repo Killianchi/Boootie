@@ -14,11 +14,16 @@ from PIL import Image, ImageChops
 
 from . import killswitch
 from .geometry import MARGIN, PHONE_ASPECT, Frame, content_rect, crop_box, make_frame, to_screen
+from .cursor import IOSCursor
+from .inputs import CuaInput, SystemInput
 from .runlog import RunLog, draw_marks
 
 SETTLE_INTERVAL = 0.2  # seconds between frame comparisons
 SETTLE_CAP = 3.0  # give up waiting after this long
 SETTLE_THRESHOLD = 0.003  # fraction of changed pixels that still counts as "still"
+
+IOS_POINTER_PT = 19.0  # AssistiveTouch pointer diameter on the phone, in iPhone points
+IPHONE_WIDTH_PT = 390.0  # iPhone screen width in points (16e, 14 Pro: 390-393)
 
 SPECIAL_KEYS = {"enter", "return", "backspace", "delete", "escape", "esc", "tab", "space",
                 "up", "down", "left", "right"}
@@ -30,7 +35,8 @@ def _env_float(name: str) -> float | None:
 
 
 class Phone:
-    def __init__(self, dry_run: bool = False, fake: bool = False, width: int = 460, label: str = ""):
+    def __init__(self, dry_run: bool = False, fake: bool = False, width: int = 460, label: str = "",
+                 input_mode: str | None = None, ios_cursor: bool | None = None):
         if fake:
             from . import fake as backend
         else:
@@ -41,7 +47,23 @@ class Phone:
         self.aspect = _env_float("BOOOTIE_ASPECT") or PHONE_ASPECT
         self.top_inset = _env_float("BOOOTIE_TOP_INSET")  # points; None = auto
         self.margin = _env_float("BOOOTIE_MARGIN") if os.environ.get("BOOOTIE_MARGIN") else MARGIN
-        self.scroll_sign = -1 if os.environ.get("BOOOTIE_SCROLL_INVERT") else 1
+        scroll_sign = -1 if os.environ.get("BOOOTIE_SCROLL_INVERT") else 1
+
+        # How input reaches the window: "system" (real pointer) or "cua" (background).
+        input_mode = input_mode or os.environ.get("BOOOTIE_INPUT", "system")
+        if input_mode == "cua":
+            self.inp = CuaInput(backend)
+        elif input_mode == "system":
+            self.inp = SystemInput(backend, scroll_sign)
+        else:
+            raise ValueError("input_mode must be 'system' or 'cua'")
+
+        # The AI's iOS-style pointer overlay: on by default with background input,
+        # where it is the only sign of where the AI is pointing.
+        if ios_cursor is None:
+            ios_cursor = input_mode == "cua"
+        self.cursor = IOSCursor() if (ios_cursor and not fake) else None
+        self._diam = 16.0
         self.log = RunLog(label=label or ("dry" if dry_run else ""))
 
     # ------------------------------------------------------------ seeing
@@ -87,46 +109,74 @@ class Phone:
 
     # ------------------------------------------------------------ acting
 
-    def _act(self, tool: str, args: dict, plan: Callable[[Frame], tuple[list[dict], Callable[[], None]]],
+    def _act(self, tool: str, args: dict, plan: Callable[[Frame], tuple[list[dict], Callable[[object], None]]],
              keys: bool = False) -> Image.Image:
         """Shared wrapper for every action: kill switch, fresh frame, draw target,
-        perform (unless dry run), settle, log. `keys`: the action types, so the window
-        must be confirmed frontmost first."""
+        perform (unless dry run), settle, log. `keys`: the action types, so (with the
+        system input) the window must be confirmed frontmost first."""
         t0 = time.monotonic()
         i = self.log.next()
-        entry: dict = {"i": i, "tool": tool, "args": args, "dry_run": self.dry_run}
+        entry: dict = {"i": i, "tool": tool, "args": args, "dry_run": self.dry_run, "input": self.inp.name}
         try:
             killswitch.check()
             before, frame, win = self.grab()
             marks, do = plan(frame)  # validates coordinates before anything moves
+            self._diam = IOS_POINTER_PT * frame.content.w / IPHONE_WIDTH_PT
             entry["marks"] = marks
             entry["window"] = vars(win.bounds)
             entry["frame"] = self.log.save(draw_marks(before, marks), f"{i:03d}_{tool}.png")
             if self.dry_run:
+                self._preview(marks)
                 return before
-            self.b.activate(win, required=keys)
+            self.inp.prepare(win, keys)
             killswitch.check()
-            do()
+            do(win)
             after, entry["settle_ms"] = self.settle()
             entry["after"] = self.log.save(after, f"{i:03d}_{tool}_after.jpg")
             return after
         except Exception as e:
             entry["error"] = f"{type(e).__name__}: {e}"
+            if getattr(self.inp, "log", None):
+                entry["cua_calls"] = self.inp.log[-3:]
             raise
         finally:
             entry["ms"] = round((time.monotonic() - t0) * 1000)
             self.log.write(entry)
 
+    # -- the AI's pointer overlay
+
+    def _glide(self, sx: float, sy: float, ms: int = 220, wait: bool = True) -> None:
+        if self.cursor:
+            self.cursor.glide(sx, sy, self._diam, ms)
+            if wait:
+                time.sleep(ms / 1000 + 0.03)
+
+    def _press(self, down: bool) -> None:
+        if self.cursor:
+            (self.cursor.press if down else self.cursor.release)()
+            if down:
+                time.sleep(0.06)
+
+    def _preview(self, marks: list[dict]) -> None:
+        """Dry run: show where the AI would act, without acting."""
+        for m in marks:
+            if "screen" in m:
+                self._glide(m["screen"][0], m["screen"][1])
+                self._press(True)
+                time.sleep(0.1)
+                self._press(False)
+
+    # -- actions
+
     def tap(self, x: float, y: float) -> Image.Image:
         def plan(f):
             sx, sy = to_screen(f, x, y)
 
-            def do():
-                self.b.move(sx, sy)
-                time.sleep(0.05)
-                self.b.mouse_down(sx, sy)
-                time.sleep(0.07)
-                self.b.mouse_up(sx, sy)
+            def do(win):
+                self._glide(sx, sy)
+                self._press(True)
+                self.inp.tap(win, sx, sy)
+                self._press(False)
 
             return [{"kind": "dot", "x": x, "y": y, "screen": [sx, sy]}], do
 
@@ -136,12 +186,11 @@ class Phone:
         def plan(f):
             sx, sy = to_screen(f, x, y)
 
-            def do():
-                self.b.move(sx, sy)
-                time.sleep(0.05)
-                self.b.mouse_down(sx, sy)
-                time.sleep(seconds)
-                self.b.mouse_up(sx, sy)
+            def do(win):
+                self._glide(sx, sy)
+                self._press(True)
+                self.inp.long_press(win, sx, sy, seconds)
+                self._press(False)
 
             return [{"kind": "dot", "x": x, "y": y, "long": True, "screen": [sx, sy]}], do
 
@@ -151,16 +200,12 @@ class Phone:
         def plan(f):
             a, b = to_screen(f, x1, y1), to_screen(f, x2, y2)
 
-            def do():
-                steps = max(8, duration_ms // 16)
-                self.b.move(*a)
-                time.sleep(0.05)
-                self.b.mouse_down(*a)
-                for k in range(1, steps + 1):
-                    t = k / steps
-                    self.b.drag_to(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t)
-                    time.sleep(duration_ms / 1000 / steps)
-                self.b.mouse_up(*b)
+            def do(win):
+                self._glide(*a)
+                self._press(True)
+                self._glide(*b, ms=duration_ms, wait=False)  # pointer travels with the finger
+                self.inp.swipe(win, a, b, duration_ms)
+                self._press(False)
 
             mark = {"kind": "arrow", "x1": x1, "y1": y1, "x2": x2, "y2": y2, "screen": [*a, *b]}
             return [mark], do
@@ -176,14 +221,10 @@ class Phone:
             px = f.img_w / 2 if x is None else x
             py = f.img_h / 2 if y is None else y
             sx, sy = to_screen(f, px, py)
-            # "down" = reveal content further down = wheel moves negative.
-            dy = {"up": 1, "down": -1}.get(direction, 0) * self.scroll_sign
-            dx = {"left": 1, "right": -1}.get(direction, 0) * self.scroll_sign
 
-            def do():
-                for _ in range(amount * 6):
-                    self.b.scroll(sx, sy, dy * 15, dx * 15)
-                    time.sleep(0.012)
+            def do(win):
+                self._glide(sx, sy)
+                self.inp.scroll(win, sx, sy, direction, amount)
 
             L = 40 + 12 * amount
             vx, vy = {"up": (0, -L), "down": (0, L), "left": (-L, 0), "right": (L, 0)}[direction]
@@ -191,31 +232,12 @@ class Phone:
 
         return self._act("scroll", {"direction": direction, "amount": amount, "x": x, "y": y}, plan)
 
-    def _type(self, text: str, method: str) -> None:
-        if method == "paste":
-            self.b.paste(text)
-            return
-        if method == "keys":
-            self.b.type_keys(text)
-            return
-        # auto: key presses for plain ASCII runs, clipboard paste for everything else
-        run, run_keys = "", None
-        for ch in text + "\0":
-            k = ch != "\0" and self.b.can_type_with_keys(ch)
-            if ch == "\0" or (run and k != run_keys):
-                if run:
-                    (self.b.type_keys if run_keys else self.b.paste)(run)
-                    time.sleep(0.15)
-                run = ""
-            if ch != "\0":
-                run, run_keys = run + ch, k
-
     def type_text(self, text: str, method: str = "auto") -> Image.Image:
         if method not in ("auto", "keys", "paste"):
             raise ValueError("method must be auto, keys or paste")
 
         def plan(f):
-            return [{"kind": "text", "text": f"type: {text}"}], lambda: self._type(text, method)
+            return [{"kind": "text", "text": f"type: {text}"}], lambda win: self.inp.type_text(win, text, method)
 
         return self._act("type_text", {"text": text, "method": method}, plan, keys=True)
 
@@ -225,13 +247,13 @@ class Phone:
             raise ValueError(f"unsupported key {key!r}; use one of {sorted(SPECIAL_KEYS)}")
 
         def plan(f):
-            return [{"kind": "text", "text": f"key: {key}"}], lambda: self.b.key(key)
+            return [{"kind": "text", "text": f"key: {key}"}], lambda win: self.inp.key(win, key)
 
         return self._act("press_key", {"key": key}, plan, keys=True)
 
     def _shortcut(self, tool: str, digit: str) -> Image.Image:
         def plan(f):
-            return [{"kind": "text", "text": f"{tool} (Cmd+{digit})"}], lambda: self.b.key(digit, cmd=True)
+            return [{"kind": "text", "text": f"{tool} (Cmd+{digit})"}], lambda win: self.inp.key(win, digit, cmd=True)
 
         return self._act(tool, {}, plan, keys=True)
 
@@ -244,11 +266,11 @@ class Phone:
 
     def spotlight(self, query: str = "") -> Image.Image:
         def plan(f):
-            def do():
-                self.b.key("3", cmd=True)
+            def do(win):
+                self.inp.key(win, "3", cmd=True)
                 time.sleep(0.8)  # let the search field appear and take focus
                 if query:
-                    self._type(query, "auto")
+                    self.inp.type_text(win, query, "auto")
 
             return [{"kind": "text", "text": f"spotlight: {query}"}], do
 

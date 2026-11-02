@@ -19,5 +19,7 @@ sent to every client as the server's instructions, so Claude Desktop gets it too
 - `boootie/geometry.py` screenshot pixels <-> screen points (the one mapping; tested)
 - `boootie/mac.py` window lookup, capture, CGEvent mouse/keyboard, permissions
 - `boootie/phone.py` actions + settle-wait + dry-run + logging (used by server and scripts)
+- `boootie/inputs.py` how input is delivered: `SystemInput` (real pointer) or `CuaInput` (Cua Driver, background)
+- `boootie/cursor.py` the AI's iOS-style pointer overlay (helper process, AppKit)
 - `boootie/server.py` MCP tools; `boootie/killswitch.py`; `boootie/runlog.py`
 - `boootie/fake.py` pretend phone; `uv run pytest` and `uv run scripts/mcp_smoke.py` run anywhere

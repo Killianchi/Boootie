@@ -283,8 +283,12 @@ def type_keys(text: str) -> None:
 
 def paste(text: str) -> None:
     """Put text on the Mac clipboard and press Cmd+V (reaches the phone via Universal Clipboard)."""
+    set_clipboard(text)
+    time.sleep(0.3)  # give the clipboard time to sync to the phone
+    key("v", cmd=True)
+
+
+def set_clipboard(text: str) -> None:
     pb = NSPasteboard.generalPasteboard()
     pb.clearContents()
     pb.setString_forType_(text, NSPasteboardTypeString)
-    time.sleep(0.3)  # give the clipboard time to sync to the phone
-    key("v", cmd=True)

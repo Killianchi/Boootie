@@ -3,6 +3,7 @@
     uv run boootie-mcp              real phone
     uv run boootie-mcp --dry-run    log + draw targets, never touch mouse/keyboard
     uv run boootie-mcp --fake       pretend phone, for testing without a Mac
+    uv run boootie-mcp --input cua  background input (Cua Driver) + iOS-style AI cursor
 """
 
 from __future__ import annotations
@@ -128,9 +129,15 @@ def main() -> None:
     p.add_argument("--dry-run", action="store_true", help="never move the mouse or press keys")
     p.add_argument("--fake", action="store_true", help="use a pretend phone (no Mac needed)")
     p.add_argument("--width", type=int, default=460, help="screenshot width in pixels")
+    p.add_argument("--input", choices=["system", "cua"], default=None,
+                   help="system: real pointer (default). cua: background input via Cua Driver, "
+                        "your pointer stays yours")
+    p.add_argument("--ios-cursor", action=argparse.BooleanOptionalAction, default=None,
+                   help="draw the AI's iOS-style pointer (default: on with --input cua)")
     a = p.parse_args()
 
-    phone = Phone(dry_run=a.dry_run, fake=a.fake, width=a.width)
+    phone = Phone(dry_run=a.dry_run, fake=a.fake, width=a.width, input_mode=a.input, ios_cursor=a.ios_cursor)
+    print(f"[boootie] input: {phone.inp.name}, iOS cursor: {'on' if phone.cursor else 'off'}", file=sys.stderr)
     print(f"[boootie] run folder: {phone.log.dir}", file=sys.stderr)
     if a.dry_run:
         print("[boootie] DRY RUN: no input will be sent", file=sys.stderr)

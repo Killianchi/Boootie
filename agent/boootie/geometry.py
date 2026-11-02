@@ -44,17 +44,26 @@ class Frame:
     img_h: int
 
 
-def content_rect(window: Rect, aspect: float = PHONE_ASPECT, top_inset: float | None = None) -> Rect:
+MARGIN = 8.0  # black border around the phone screen inside the window, in points (measured)
+
+
+def content_rect(
+    window: Rect, aspect: float = PHONE_ASPECT, top_inset: float | None = None, margin: float = MARGIN
+) -> Rect:
     """The phone-screen part of the iPhone Mirroring window, in screen points.
 
-    The window is the phone screen plus a title-bar strip on top. The phone fills the
-    width, so the content height is width * aspect and whatever is left over at the
-    top is title bar. `top_inset` overrides that guess.
+    Measured on macOS 15: the window is the phone screen with an 8 pt black border on
+    the left, right and bottom, and a taller strip on top (title bar + border, ~38 pt).
+    So: width = window width - 2 * margin, height = width * aspect, anchored to the
+    bottom border; whatever is left at the top is title bar. `top_inset` overrides the
+    top edge if that guess is ever wrong.
     """
+    w = window.w - 2 * margin
     if top_inset is None:
-        top_inset = max(0.0, window.h - window.w * aspect)
-    top_inset = min(max(0.0, top_inset), window.h - 1)
-    return Rect(window.x, window.y + top_inset, window.w, window.h - top_inset)
+        h = w * aspect
+        top_inset = window.h - margin - h
+    top_inset = min(max(0.0, top_inset), window.h - margin - 1)
+    return Rect(window.x + margin, window.y + top_inset, w, window.h - margin - top_inset)
 
 
 def image_size(content: Rect, width: int) -> tuple[int, int]:

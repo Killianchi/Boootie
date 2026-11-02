@@ -33,7 +33,7 @@ It checks three permissions for **your terminal app** and opens System Settings 
 Turn your terminal on in each list, then **quit and reopen the terminal** (Cmd+Q).
 Then it prints the window bounds and saves `window_full.png` (red box = phone area)
 and `screenshot.png` to `runs/<timestamp>_check/`. The red box must hug the phone
-screen with no title bar inside. If it's off, set `BOOOTIE_TOP_INSET=<points>`.
+screen. `screenshot.png` should show the phone edge to edge, no black border.
 
 ## Milestone 2: input from a test script
 ```bash
@@ -105,7 +105,8 @@ Without a Mac: `uv run pytest` and `uv run scripts/mcp_smoke.py` use a fake phon
 ## Settings (env vars)
 | Var | Default | Use |
 |---|---|---|
-| `BOOOTIE_TOP_INSET` | auto | title-bar height in points if the auto crop is wrong |
+| `BOOOTIE_MARGIN` | 8 | black border (points) around the phone screen inside the window |
+| `BOOOTIE_TOP_INSET` | auto | top edge of the phone screen (points from the window top) if the auto crop is wrong |
 | `BOOOTIE_ASPECT` | 2556/1179 | phone height/width (e.g. 1.778 for an iPhone SE) |
 | `BOOOTIE_SCROLL_INVERT` | off | set to 1 if `scroll("down")` goes up |
 
@@ -116,8 +117,9 @@ Without a Mac: `uv run pytest` and `uv run scripts/mcp_smoke.py` use a fake phon
 - Key typing assumes a US layout. If letters come out wrong, use `type_text(..., method="paste")`.
   Non-ASCII text always goes through Universal Clipboard (needs Handoff on), which
   overwrites your Mac clipboard and can lag.
-- The phone area is found from the phone's aspect ratio (title bar = whatever's left over).
-  Check it once with `boootie-check`.
+- The phone area is found from measured window layout: an 8 pt border on the sides and
+  bottom, the phone's aspect ratio, and the rest on top as title bar. Measured on macOS 15
+  at the default zoom. Check it with `boootie-check` if you zoom the window or update macOS.
 - `CGWindowListCreateImage` is deprecated by Apple. If it stops working, capture falls back
   to the slower `screencapture` command.
 - The kill switch blocks the *next* action. One already in progress (at most a few hundred ms

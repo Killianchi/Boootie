@@ -10,10 +10,11 @@ from dataclasses import dataclass
 
 from PIL import Image, ImageDraw
 
-from .geometry import PHONE_ASPECT, Rect
+from .geometry import Rect
 
 SCALE = 2
-BOUNDS = Rect(900, 100, 330, round(330 * PHONE_ASPECT) + 28)  # 28 pt title strip
+BOUNDS = Rect(1038, 96, 318, 701)  # same as a measured real window
+MARGIN, TOP = 8, 38  # black border; title bar + border
 events: list[tuple] = []
 
 
@@ -35,18 +36,18 @@ def find_window() -> Window:
 
 def capture(win: Window) -> Image.Image:
     w, h = round(win.bounds.w * SCALE), round(win.bounds.h * SCALE)
-    img = Image.new("RGB", (w, h), (30, 30, 36))
+    img = Image.new("RGB", (w, h), (0, 0, 0))  # black border, as in the real window
     d = ImageDraw.Draw(img)
-    d.rectangle([0, 0, w, 28 * SCALE], fill=(200, 60, 60))  # "title bar": must be cropped away
+    d.rectangle([0, 0, w, 20 * SCALE], fill=(200, 60, 60))  # "title bar": must be cropped away
+    x0, y0, x1, y1 = MARGIN * SCALE, TOP * SCALE, w - MARGIN * SCALE, h - MARGIN * SCALE
     cols, rows = 4, 8
-    top = 28 * SCALE
-    cw, ch = w / cols, (h - top) / rows
+    cw, ch = (x1 - x0) / cols, (y1 - y0) / rows
     for r in range(rows):
         for c in range(cols):
-            x0, y0 = c * cw, top + r * ch
-            d.rectangle([x0 + 6, y0 + 6, x0 + cw - 6, y0 + ch - 6], outline=(120, 160, 255), width=3)
-            d.text((x0 + 16, y0 + 16), f"R{r}C{c}", fill=(230, 230, 230))
-    d.text((16, h - 40), f"events: {len(events)}", fill=(255, 220, 120))
+            cx, cy = x0 + c * cw, y0 + r * ch
+            d.rectangle([cx, cy, cx + cw, cy + ch], fill=(40, 40, 60), outline=(120, 160, 255), width=3)
+            d.text((cx + 12, cy + 12), f"R{r}C{c}", fill=(230, 230, 230))
+    d.text((x0 + 12, y1 - 30), f"events: {len(events)}", fill=(255, 220, 120))
     return img
 
 

@@ -13,7 +13,7 @@ from typing import Callable
 from PIL import Image, ImageChops
 
 from . import killswitch
-from .geometry import PHONE_ASPECT, Frame, content_rect, crop_box, make_frame, to_screen
+from .geometry import MARGIN, PHONE_ASPECT, Frame, content_rect, crop_box, make_frame, to_screen
 from .runlog import RunLog, draw_marks
 
 SETTLE_INTERVAL = 0.2  # seconds between frame comparisons
@@ -40,6 +40,7 @@ class Phone:
         self.width = width
         self.aspect = _env_float("BOOOTIE_ASPECT") or PHONE_ASPECT
         self.top_inset = _env_float("BOOOTIE_TOP_INSET")  # points; None = auto
+        self.margin = _env_float("BOOOTIE_MARGIN") if os.environ.get("BOOOTIE_MARGIN") else MARGIN
         self.scroll_sign = -1 if os.environ.get("BOOOTIE_SCROLL_INVERT") else 1
         self.log = RunLog(label=label or ("dry" if dry_run else ""))
 
@@ -49,7 +50,7 @@ class Phone:
         """Find the window (bounds re-read every time), capture it, crop the title bar,
         downscale to the fixed screenshot size."""
         win = self.b.find_window()
-        content = content_rect(win.bounds, self.aspect, self.top_inset)
+        content = content_rect(win.bounds, self.aspect, self.top_inset, self.margin)
         frame = make_frame(content, self.width)
         cap = self.b.capture(win)
         img = cap.crop(crop_box(win.bounds, content, *cap.size))

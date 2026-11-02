@@ -23,17 +23,19 @@ def log(phone):
 def test_screenshot_crops_title_bar_and_has_fixed_size(phone):
     img = phone.screenshot()
     assert img.size == (460, 997)
-    # the fake title bar is red; none of it may survive the crop
-    r, g, b = img.getpixel((230, 2))
-    assert not (r > 150 and g < 100)
+    # no red title bar and no black border may survive the crop
+    for x, y in [(230, 1), (1, 500), (458, 500), (230, 995)]:
+        r, g, b = img.getpixel((x, y))
+        assert not (r > 150 and g < 100), (x, y)
+        assert r + g + b > 60, (x, y)
 
 
 def test_tap_maps_to_screen_points(phone):
     phone.tap(0, 0)
     phone.tap(460, 997)
     downs = [e for e in fake.events if e[0] == "down"]
-    assert downs[0][1:] == pytest.approx((900, 128), abs=0.5)  # window x, window y + 28 pt title strip
-    assert downs[1][1:] == pytest.approx((1230, 100 + fake.BOUNDS.h), abs=0.5)
+    assert downs[0][1:] == pytest.approx((1046, 134), abs=0.6)  # window + 8 pt border, + 38 pt top
+    assert downs[1][1:] == pytest.approx((1348, 96 + 701 - 8), abs=0.6)
 
 
 def test_action_is_logged_with_annotated_frame(phone):

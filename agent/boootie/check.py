@@ -52,13 +52,14 @@ def main() -> None:
     from .geometry import content_rect, crop_box, make_frame
 
     bw = win.bounds
-    content = content_rect(bw, phone.aspect, phone.top_inset)
+    content = content_rect(bw, phone.aspect, phone.top_inset, phone.margin)
     frame = make_frame(content, phone.width)
     cap = b.capture(win)
     box = crop_box(bw, content, *cap.size)
     print(f"  window id {win.id}, pid {win.pid}")
     print(f"  bounds (points): x={bw.x:.0f} y={bw.y:.0f} w={bw.w:.0f} h={bw.h:.0f}")
-    print(f"  title bar strip: {content.y - bw.y:.1f} pt (override with BOOOTIE_TOP_INSET=<pt>)")
+    print(f"  border: {phone.margin:g} pt left/right/bottom (BOOOTIE_MARGIN), "
+          f"top: {content.y - bw.y:.1f} pt (BOOOTIE_TOP_INSET)")
     print(f"  phone content (points): x={content.x:.0f} y={content.y:.0f} w={content.w:.0f} h={content.h:.0f}")
     print(f"  capture: {cap.width}x{cap.height} px -> scale {cap.width / bw.w:.2f} px/pt")
     print(f"  screenshot size: {frame.img_w}x{frame.img_h} px")

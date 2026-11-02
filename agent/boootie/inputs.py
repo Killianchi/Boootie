@@ -224,9 +224,11 @@ class CuaInput:
     name = "cua"
     moves_pointer = False
 
-    def __init__(self, backend, session: str = "boootie", binary: str | None = None):
+    def __init__(self, backend, session: str | None = None, binary: str | None = None):
         self.b = backend  # for set_clipboard (non-ASCII typing)
-        self.session = session
+        # One Cua session per boootie process: Cua ends a session when its client goes
+        # away, and a reused label then rejects calls with "session has ended".
+        self.session = session or f"boootie-{os.getpid()}"
         self.bin = binary or find_cua_driver()
         self.delivery = os.environ.get("BOOOTIE_CUA_DELIVERY", "background")  # or "foreground"
         self._scale: dict[tuple, float] = {}
@@ -271,6 +273,20 @@ class CuaInput:
         return self._run(tool, args, check)
 
     def _run(self, tool: str, args: dict, check: bool = True) -> str:
+        try:
+            return self._run_once(tool, args, check)
+        except CuaError as e:
+            if "session has ended" not in str(e) or tool == "start_session":
+                raise
+            # Cua ended our session (idle, daemon restart): open a fresh one and retry once.
+            self.session = f"boootie-{os.getpid()}-{int(time.time())}"
+            self._started = False
+            self._start()
+            if "session" in args:
+                args = {**args, "session": self.session}
+            return self._run_once(tool, args, check)
+
+    def _run_once(self, tool: str, args: dict, check: bool = True) -> str:
         t0 = time.monotonic()
         ok, out, via = self._via_mcp(tool, args) if self.transport == "mcp" else (None, "", "cli")
         if ok is None:  # no MCP connection: fall back to one process per call

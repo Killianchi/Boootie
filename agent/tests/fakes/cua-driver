@@ -10,6 +10,9 @@ def tool_call(tool, args):
         f.write(json.dumps({"tool": tool, "args": args, "via": sys.argv[1]}) + "\n")
     if os.environ.get("FAKE_CUA_FAIL") == tool:
         return False, "simulated failure"
+    ended = os.environ.get("FAKE_CUA_ENDED_SESSION")
+    if ended and args.get("session") == ended and tool != "start_session":
+        return False, f"session has ended; tool call '{tool}' was rejected. Call start_session"
     if os.environ.get("FAKE_CUA_NO_WAIT_ARG") and "post_action_wait" in args:
         return False, "invalid argument: unknown field post_action_wait"
     if tool == "get_window_state" and args.get("screenshot_out_file"):

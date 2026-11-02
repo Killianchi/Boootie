@@ -18,7 +18,7 @@ from .cursor import IOSCursor
 from .inputs import CuaInput, SystemInput
 from .runlog import RunLog, draw_marks
 
-SETTLE_INTERVAL = 0.2  # seconds between frame comparisons
+SETTLE_INTERVAL = 0.15  # seconds between frame comparisons
 SETTLE_CAP = 3.0  # give up waiting after this long
 SETTLE_THRESHOLD = 0.003  # fraction of changed pixels that still counts as "still"
 
@@ -97,7 +97,7 @@ class Phone:
     def settle(self) -> tuple[Image.Image, int]:
         """Wait until the screen stops changing (or SETTLE_CAP), return the last frame."""
         t0 = time.monotonic()
-        time.sleep(0.15)
+        time.sleep(0.1)
         prev = self.grab()[0]
         while time.monotonic() - t0 < SETTLE_CAP:
             time.sleep(SETTLE_INTERVAL)
@@ -276,7 +276,7 @@ class Phone:
         def plan(f):
             def do(win):
                 self.inp.key(win, "3", cmd=True)
-                time.sleep(0.8)  # let the search field appear and take focus
+                time.sleep(0.5)  # let the search field appear and take focus
                 if query:
                     self.inp.type_text(win, query, "auto")
 

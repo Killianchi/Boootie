@@ -44,7 +44,7 @@ def test_tap_sends_window_pixels_and_never_moves_the_pointer(phone):
     # window 318x701 pt at x=1038,y=96, phone screen starts 8 pt in and ~38 pt down; 2 px per pt
     assert (c1["x"], c1["y"]) == pytest.approx((16, 76.6), abs=1.2)
     assert (c2["x"], c2["y"]) == pytest.approx((636 - 16, 1402 - 16), abs=1.2)
-    assert c1["pid"] == 1 and c1["window_id"] == 1 and c1["session"] == "boootie"
+    assert c1["pid"] == 1 and c1["window_id"] == 1 and c1["session"].startswith("boootie")
     assert not [e for e in fake.events if e[0] in ("move", "down", "up")]  # real pointer untouched
 
 
@@ -126,3 +126,18 @@ def test_drops_post_action_wait_if_this_cua_rejects_it(phone, monkeypatch):
     clicks = [c["args"] for c in calls(phone, "click")]
     # first click: tried with the argument, rejected, retried without; second: straight without
     assert ["post_action_wait" in c for c in clicks] == [True, False, False]
+
+
+def test_session_label_is_per_process():
+    import os
+    from boootie.inputs import CuaInput
+    assert CuaInput(fake).session == f"boootie-{os.getpid()}"
+
+
+def test_recovers_when_cua_ended_the_session(phone, monkeypatch):
+    monkeypatch.setenv("FAKE_CUA_ENDED_SESSION", phone.inp.session)
+    old = phone.inp.session
+    phone.home()
+    assert phone.inp.session != old
+    hot = calls(phone, "hotkey")
+    assert hot[-1]["args"]["session"] == phone.inp.session  # retried on the new session

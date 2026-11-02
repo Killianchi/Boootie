@@ -31,3 +31,7 @@ estimated ship date, Formspree form id, support email, accent colour. Run `npm r
 
 Vercel Web Analytics (no cookies). Enable it in the Vercel project; events: `cta_click` (placement: hero, sticky, preorder),
 `faq_open`, `email_signup`, `model_loaded`.
+
+## Phone agent
+
+`agent/` is the boootie MCP server: Claude operating an iPhone through macOS iPhone Mirroring. See `agent/README.md`.

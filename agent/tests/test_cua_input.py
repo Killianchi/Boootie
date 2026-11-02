@@ -81,3 +81,26 @@ def test_failure_is_reported_with_cua_output(phone, monkeypatch):
         phone.tap(10, 10)
     entry = json.loads((phone.log.dir / "log.jsonl").read_text().splitlines()[-1])
     assert "cua_calls" in entry and "simulated failure" in entry["error"]
+
+
+def test_uses_one_persistent_mcp_connection(phone):
+    phone.tap(10, 10)
+    phone.home()
+    assert {c["via"] for c in calls(phone)} == {"mcp"}
+    entry = json.loads((phone.log.dir / "log.jsonl").read_text().splitlines()[-1])
+    t = entry["timing"]
+    assert {"grab_ms", "input_ms", "settle_ms"} <= set(t)
+    assert [c["tool"] for c in t["cua_calls"]] == ["hotkey"]
+
+
+def test_falls_back_to_one_process_per_call(tmp_path, monkeypatch):
+    monkeypatch.setattr("boootie.runlog.DEFAULT_ROOT", tmp_path)
+    monkeypatch.setattr(killswitch, "STATE", tmp_path / "KILLED")
+    monkeypatch.setenv("BOOOTIE_CUA_BIN", str(FAKE_BIN))
+    monkeypatch.setenv("FAKE_CUA_LOG", str(tmp_path / "cua.jsonl"))
+    monkeypatch.setenv("FAKE_CUA_NO_MCP", "1")
+    p = Phone(fake=True, input_mode="cua")
+    p.cua_log = tmp_path / "cua.jsonl"
+    p.tap(10, 10)
+    assert {c["via"] for c in calls(p)} == {"call"}
+    assert calls(p, "click")

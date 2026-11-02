@@ -119,7 +119,9 @@ class Phone:
         entry: dict = {"i": i, "tool": tool, "args": args, "dry_run": self.dry_run, "input": self.inp.name}
         try:
             killswitch.check()
+            tg = time.monotonic()
             before, frame, win = self.grab()
+            timing = entry["timing"] = {"grab_ms": round((time.monotonic() - tg) * 1000)}
             marks, do = plan(frame)  # validates coordinates before anything moves
             self._diam = IOS_POINTER_PT * frame.content.w / IPHONE_WIDTH_PT
             entry["marks"] = marks
@@ -128,10 +130,16 @@ class Phone:
             if self.dry_run:
                 self._preview(marks)
                 return before
+            ti = time.monotonic()
+            if hasattr(self.inp, "calls"):
+                self.inp.calls = []
             self.inp.prepare(win, keys)
             killswitch.check()
             do(win)
-            after, entry["settle_ms"] = self.settle()
+            timing["input_ms"] = round((time.monotonic() - ti) * 1000)
+            if getattr(self.inp, "calls", None):
+                timing["cua_calls"] = self.inp.calls
+            after, timing["settle_ms"] = self.settle()
             entry["after"] = self.log.save(after, f"{i:03d}_{tool}_after.jpg")
             return after
         except Exception as e:
@@ -145,17 +153,17 @@ class Phone:
 
     # -- the AI's pointer overlay
 
-    def _glide(self, sx: float, sy: float, ms: int = 220, wait: bool = True) -> None:
+    def _glide(self, sx: float, sy: float, ms: int = 160, wait: bool = True) -> None:
+        """Move the AI pointer. The input call itself takes a moment, so we only wait
+        ~60% of the glide: the pointer lands as the tap does, without adding a pause."""
         if self.cursor:
             self.cursor.glide(sx, sy, self._diam, ms)
             if wait:
-                time.sleep(ms / 1000 + 0.03)
+                time.sleep(ms / 1000 * 0.6)
 
     def _press(self, down: bool) -> None:
         if self.cursor:
             (self.cursor.press if down else self.cursor.release)()
-            if down:
-                time.sleep(0.06)
 
     def _preview(self, marks: list[dict]) -> None:
         """Dry run: show where the AI would act, without acting."""

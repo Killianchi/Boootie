@@ -98,6 +98,9 @@ uv run scripts/m2_input.py spotlight Settings --input cua
 
 claude mcp add boootie-cua -- uv run --directory "$PWD" boootie-mcp --input cua
 ```
+Speed: `uv run scripts/bench.py --input cua` times a few safe actions and shows where the time goes
+(capture, input, settle, each Cua call). Every log entry also has a `timing` field.
+
 `--ios-cursor` also shows the AI pointer with the default input (and in `--dry-run`, as a preview
 of where it would tap). `--no-ios-cursor` hides it.
 
@@ -139,6 +142,7 @@ Without a Mac: `uv run pytest` and `uv run scripts/mcp_smoke.py` use a fake phon
 | `BOOOTIE_INPUT` | system | `cua` = background input via Cua Driver (same as `--input cua`) |
 | `BOOOTIE_CUA_DELIVERY` | background | `foreground` if background events don't reach iPhone Mirroring |
 | `BOOOTIE_CUA_BIN` | auto | path to `cua-driver` if it isn't found |
+| `BOOOTIE_CUA_TRANSPORT` | mcp | `mcp` = one persistent `cua-driver mcp` connection; `cli` = one process per call (slower) |
 
 ## Known limits
 - iPhone Mirroring only works while the phone is **locked**. Unlocking it pauses

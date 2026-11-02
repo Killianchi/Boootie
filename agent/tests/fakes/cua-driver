@@ -1,15 +1,38 @@
 #!/usr/bin/env python3
-"""Fake `cua-driver` for tests: logs each `call` to $FAKE_CUA_LOG, fakes a 2x snapshot."""
+"""Fake `cua-driver` for tests. `call TOOL JSON` or `mcp` (stdio JSON-RPC).
+Logs every tool call to $FAKE_CUA_LOG and fakes a 2x window snapshot."""
 import json, os, sys
 from PIL import Image
 
-_, cmd, tool, raw = sys.argv[:4]
-args = json.loads(raw)
-with open(os.environ["FAKE_CUA_LOG"], "a") as f:
-    f.write(json.dumps({"tool": tool, "args": args}) + "\n")
-if os.environ.get("FAKE_CUA_FAIL") == tool:
-    print('{"isError": true, "content": [{"type": "text", "text": "simulated failure"}]}')
-    sys.exit(1)
-if tool == "get_window_state" and args.get("screenshot_out_file"):
-    Image.new("RGB", (636, 1402)).save(args["screenshot_out_file"])  # 318x701 pt window at 2x
-print(json.dumps({"isError": False, "content": [{"type": "text", "text": "ok"}]}))
+
+def tool_call(tool, args):
+    with open(os.environ["FAKE_CUA_LOG"], "a") as f:
+        f.write(json.dumps({"tool": tool, "args": args, "via": sys.argv[1]}) + "\n")
+    if os.environ.get("FAKE_CUA_FAIL") == tool:
+        return False, "simulated failure"
+    if tool == "get_window_state" and args.get("screenshot_out_file"):
+        Image.new("RGB", (636, 1402)).save(args["screenshot_out_file"])  # 318x701 pt window at 2x
+    return True, "ok"
+
+
+if sys.argv[1] == "call":
+    ok, text = tool_call(sys.argv[2], json.loads(sys.argv[3]))
+    print(json.dumps({"isError": not ok, "content": [{"type": "text", "text": text}]}))
+    sys.exit(0 if ok else 1)
+
+if sys.argv[1] == "mcp":
+    if os.environ.get("FAKE_CUA_NO_MCP"):
+        sys.exit(1)
+    for line in sys.stdin:
+        msg = json.loads(line)
+        if "id" not in msg:
+            continue
+        if msg["method"] == "initialize":
+            result = {"protocolVersion": "2025-06-18", "capabilities": {"tools": {}},
+                      "serverInfo": {"name": "fake-cua", "version": "0"}}
+        elif msg["method"] == "tools/call":
+            ok, text = tool_call(msg["params"]["name"], msg["params"]["arguments"])
+            result = {"isError": not ok, "content": [{"type": "text", "text": text}]}
+        else:
+            result = {}
+        print(json.dumps({"jsonrpc": "2.0", "id": msg["id"], "result": result}), flush=True)

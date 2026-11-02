@@ -14,9 +14,12 @@ from __future__ import annotations
 
 import json
 import os
+import queue
 import shutil
 import subprocess
+import sys
 import tempfile
+import threading
 import time
 
 from PIL import Image
@@ -131,6 +134,81 @@ def find_cua_driver() -> str:
     return "cua-driver"
 
 
+class CuaMCP:
+    """One long-lived `cua-driver mcp` process, spoken to over stdio JSON-RPC (MCP).
+
+    Saves launching a fresh `cua-driver` process (and reconnecting to its daemon)
+    for every single click and key press.
+    """
+
+    def __init__(self, binary: str):
+        self.p = subprocess.Popen([binary, "mcp"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                  stderr=subprocess.DEVNULL, text=True, bufsize=1)
+        self.q: queue.Queue = queue.Queue()
+        threading.Thread(target=self._reader, daemon=True).start()
+        self.n = 0
+        self.lock = threading.Lock()
+        self._request("initialize", {"protocolVersion": "2025-06-18", "capabilities": {},
+                                     "clientInfo": {"name": "boootie", "version": "0.1"}}, timeout=20)
+        self._send({"jsonrpc": "2.0", "method": "notifications/initialized"})
+
+    def _reader(self) -> None:
+        for line in self.p.stdout:
+            line = line.strip()
+            if line:
+                try:
+                    self.q.put(json.loads(line))
+                except ValueError:
+                    pass  # not JSON-RPC (log noise)
+        self.q.put(None)  # process ended
+
+    def _send(self, msg: dict) -> None:
+        self.p.stdin.write(json.dumps(msg) + "\n")
+        self.p.stdin.flush()
+
+    def _request(self, method: str, params: dict, timeout: float = 30) -> dict:
+        with self.lock:
+            self.n += 1
+            rid = self.n
+            self._send({"jsonrpc": "2.0", "id": rid, "method": method, "params": params})
+            deadline = time.monotonic() + timeout
+            while True:
+                left = deadline - time.monotonic()
+                if left <= 0:
+                    raise CuaError(f"cua-driver mcp: no answer to {method} within {timeout:.0f}s")
+                try:
+                    msg = self.q.get(timeout=left)
+                except queue.Empty:
+                    continue
+                if msg is None:
+                    raise CuaError("cua-driver mcp exited")
+                if "method" in msg and "id" in msg:  # a request from the server (ping, roots...)
+                    reply = {"jsonrpc": "2.0", "id": msg["id"]}
+                    if msg["method"] == "ping":
+                        reply["result"] = {}
+                    else:
+                        reply["error"] = {"code": -32601, "message": "not supported"}
+                    self._send(reply)
+                    continue
+                if msg.get("id") == rid:
+                    if "error" in msg:
+                        raise CuaError(f"cua-driver mcp {method}: {msg['error']}")
+                    return msg.get("result", {})
+                # anything else: notifications or stale replies, ignore
+
+    def call(self, tool: str, args: dict) -> tuple[bool, str]:
+        res = self._request("tools/call", {"name": tool, "arguments": args})
+        text = " ".join(c.get("text", "") for c in res.get("content", []) if c.get("type") == "text")
+        return not res.get("isError", False), text
+
+    def close(self) -> None:
+        try:
+            self.p.stdin.close()
+            self.p.terminate()
+        except Exception:
+            pass
+
+
 class CuaInput:
     """Background input through the `cua-driver` CLI (its daemon must be running).
 
@@ -150,6 +228,10 @@ class CuaInput:
         self._scale: dict[tuple, float] = {}
         self._started = False
         self.log: list[dict] = []  # last calls, for debugging
+        self.calls: list[dict] = []  # calls made during the current action (tool, ms), for timing
+        # "mcp": one persistent connection (fast). "cli": one process per call (simple, slow).
+        self.transport = os.environ.get("BOOOTIE_CUA_TRANSPORT", "mcp")
+        self._mcp: CuaMCP | None = None
 
     # -- plumbing
 
@@ -165,6 +247,35 @@ class CuaInput:
         return self._run(tool, args, check)
 
     def _run(self, tool: str, args: dict, check: bool = True) -> str:
+        t0 = time.monotonic()
+        ok, out, via = self._via_mcp(tool, args) if self.transport == "mcp" else (None, "", "cli")
+        if ok is None:  # no MCP connection: fall back to one process per call
+            ok, out, via = self._via_cli(tool, args)
+        ms = round((time.monotonic() - t0) * 1000)
+        self.calls.append({"tool": tool, "ms": ms, "via": via})
+        self.log = (self.log + [{"tool": tool, "args": args, "ok": ok, "ms": ms, "out": out[-500:]}])[-20:]
+        if check and not ok:
+            raise CuaError(f"cua-driver {tool} failed: {out.strip()[-400:]}")
+        return out
+
+    def _via_mcp(self, tool: str, args: dict) -> tuple[bool | None, str, str]:
+        try:
+            if self._mcp is None:
+                self._mcp = CuaMCP(self.bin)
+            ok, out = self._mcp.call(tool, args)
+            return ok, out, "mcp"
+        except FileNotFoundError:
+            raise CuaError("cua-driver is not installed. Install it: "
+                           '/bin/bash -c "$(curl -fsSL https://cua.ai/driver/install.sh)"') from None
+        except (CuaError, OSError) as e:
+            print(f"[boootie] cua-driver mcp unavailable ({e}); using one process per call", file=sys.stderr)
+            if self._mcp:
+                self._mcp.close()
+            self._mcp = None
+            self.transport = "cli"
+            return None, "", "mcp"
+
+    def _via_cli(self, tool: str, args: dict) -> tuple[bool, str, str]:
         try:
             r = subprocess.run([self.bin, "call", tool, json.dumps(args)],
                                capture_output=True, text=True, timeout=30)
@@ -172,11 +283,8 @@ class CuaInput:
             raise CuaError("cua-driver is not installed. Install it: "
                            '/bin/bash -c "$(curl -fsSL https://cua.ai/driver/install.sh)"') from None
         out = (r.stdout or "") + (r.stderr or "")
-        self.log = (self.log + [{"tool": tool, "args": args, "rc": r.returncode, "out": out[-500:]}])[-20:]
-        failed = r.returncode != 0 or '"isError": true' in out or '"isError":true' in out
-        if check and failed:
-            raise CuaError(f"cua-driver {tool} failed: {out.strip()[-400:]}")
-        return out
+        ok = r.returncode == 0 and '"isError": true' not in out and '"isError":true' not in out
+        return ok, out, "cli"
 
     def _target(self, win) -> dict:
         args = {"pid": win.pid, "window_id": win.id, "session": self.session, "post_action_wait": "none"}

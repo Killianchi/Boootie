@@ -112,6 +112,10 @@ class CuaError(RuntimeError):
     pass
 
 
+WAIT_TOOLS = {"click", "drag", "scroll", "type_text", "press_key", "hotkey"}
+TYPE_DELAY_MS = 8  # between characters (Cua's default is 30)
+
+
 CUA_LOCATIONS = [
     "~/.local/bin/cua-driver", "/usr/local/bin/cua-driver", "/opt/homebrew/bin/cua-driver",
     "~/.cua-driver/bin/cua-driver", "/Applications/CuaDriver.app/Contents/MacOS/cua-driver",
@@ -227,6 +231,7 @@ class CuaInput:
         self.delivery = os.environ.get("BOOOTIE_CUA_DELIVERY", "background")  # or "foreground"
         self._scale: dict[tuple, float] = {}
         self._started = False
+        self._no_wait_arg: set[str] = set()  # tools this Cua version won't take post_action_wait for
         self.log: list[dict] = []  # last calls, for debugging
         self.calls: list[dict] = []  # calls made during the current action (tool, ms), for timing
         # "mcp": one persistent connection (fast). "cli": one process per call (simple, slow).
@@ -241,9 +246,28 @@ class CuaInput:
             self._started = True
             self._run("start_session", {"session": self.session}, check=False)
             self._run("set_agent_cursor_enabled", {"session": self.session, "enabled": False}, check=False)
+            # Even hidden, Cua's cursor "glides" before each click (default: at least
+            # 600 ms per move + 80 ms dwell) and the click waits for it. boootie draws
+            # its own pointer, so make Cua's move instant.
+            self._run("set_agent_cursor_motion", {
+                "session": self.session, "style": "classic", "timing": "fixed",
+                "glide_duration_ms": 1, "dwell_after_click_ms": 0, "arc_size": 0,
+                "effects": {"glow": "off", "ripple": "off", "squish": "off", "trail": "off", "magnet": "off"},
+            }, check=False)
 
     def _call(self, tool: str, args: dict, check: bool = True) -> str:
+        """Run a tool. Action tools get post_action_wait="none" (skip Cua's up-to-300 ms
+        wait for window changes; boootie does its own settle-wait). If this Cua version
+        rejects that argument for a tool, retry without it and remember."""
         self._start()
+        if tool in WAIT_TOOLS and tool not in self._no_wait_arg:
+            try:
+                return self._run(tool, {**args, "post_action_wait": "none"}, True)
+            except CuaError:
+                # Maybe this Cua version rejects the argument: try once without it.
+                out = self._run(tool, args, check)
+                self._no_wait_arg.add(tool)  # worked without it: stop sending it
+                return out
         return self._run(tool, args, check)
 
     def _run(self, tool: str, args: dict, check: bool = True) -> str:
@@ -287,7 +311,6 @@ class CuaInput:
         return ok, out, "cli"
 
     def _target(self, win) -> dict:
-        # (no "post_action_wait": the installed Cua Driver rejected it on a real Mac)
         args = {"pid": win.pid, "window_id": win.id, "session": self.session}
         if self.delivery != "background":
             args["delivery_mode"] = self.delivery
@@ -360,11 +383,11 @@ class CuaInput:
             self._paste(win, text)
             return
         if method == "keys":
-            self._call("type_text", {**self._target(win), "text": text})
+            self._call("type_text", {**self._target(win), "text": text, "delay_ms": TYPE_DELAY_MS})
             return
         for run, ascii_ in split_runs(text, lambda c: c.isascii() and (c.isprintable() or c == "\n")):
             if ascii_:
-                self._call("type_text", {**self._target(win), "text": run})
+                self._call("type_text", {**self._target(win), "text": run, "delay_ms": TYPE_DELAY_MS})
             else:
                 self._paste(win, run)
             time.sleep(0.15)

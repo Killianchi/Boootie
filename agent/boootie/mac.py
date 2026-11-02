@@ -14,6 +14,7 @@ from dataclasses import dataclass
 import Quartz
 from AppKit import (
     NSApplicationActivateIgnoringOtherApps,
+    NSApplicationActivationPolicyRegular,
     NSPasteboard,
     NSPasteboardTypeString,
     NSRunningApplication,
@@ -122,10 +123,23 @@ def _frontmost_pid() -> int | None:
     )
     for w in infos or []:  # ordered front to back
         b = w.get("kCGWindowBounds", {})
+        pid = int(w.get("kCGWindowOwnerPID", 0))
         if (w.get("kCGWindowLayer", 0) == 0 and w.get("kCGWindowAlpha", 1) > 0
-                and b.get("Width", 0) > 50 and b.get("Height", 0) > 50):
-            return int(w["kCGWindowOwnerPID"])
+                and b.get("Width", 0) > 50 and b.get("Height", 0) > 50 and _is_regular_app(pid)):
+            return pid
     return None
+
+
+_regular: dict[int, bool] = {}
+
+
+def _is_regular_app(pid: int) -> bool:
+    """True for normal Dock apps. Background helpers (Cua Driver's cursor overlay, our
+    own pointer overlay) can own transparent full-screen windows; they are never 'in front'."""
+    if pid not in _regular:
+        app = NSRunningApplication.runningApplicationWithProcessIdentifier_(pid)
+        _regular[pid] = app is not None and app.activationPolicy() == NSApplicationActivationPolicyRegular
+    return _regular[pid]
 
 
 def _wait_front(pid: int, seconds: float) -> bool:

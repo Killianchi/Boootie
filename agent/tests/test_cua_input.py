@@ -104,3 +104,25 @@ def test_falls_back_to_one_process_per_call(tmp_path, monkeypatch):
     p.tap(10, 10)
     assert {c["via"] for c in calls(p)} == {"call"}
     assert calls(p, "click")
+
+
+def test_cua_glide_is_made_instant(phone):
+    phone.tap(10, 10)
+    (m,) = calls(phone, "set_agent_cursor_motion")
+    assert m["args"]["glide_duration_ms"] == 1 and m["args"]["dwell_after_click_ms"] == 0
+
+
+def test_skips_cua_post_action_wait_and_typing_is_fast(phone):
+    phone.tap(10, 10)
+    phone.type_text("hi")
+    assert calls(phone, "click")[0]["args"]["post_action_wait"] == "none"
+    assert calls(phone, "type_text")[0]["args"]["delay_ms"] == 8
+
+
+def test_drops_post_action_wait_if_this_cua_rejects_it(phone, monkeypatch):
+    monkeypatch.setenv("FAKE_CUA_NO_WAIT_ARG", "1")
+    phone.tap(10, 10)
+    phone.tap(20, 20)
+    clicks = [c["args"] for c in calls(phone, "click")]
+    # first click: tried with the argument, rejected, retried without; second: straight without
+    assert ["post_action_wait" in c for c in clicks] == [True, False, False]

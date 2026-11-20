@@ -20,5 +20,9 @@
   "accent": "#D97757",
   "onAccent": "#000000",
   "placeholders": "formspreeId and supportEmail are placeholders until confirmed.",
-  "retailUsd": 219
+  "retailUsd": 219,
+  "legalName": "",
+  "legalAddress": "",
+  "contactEmail": "",
+  "policyDate": "20 November 2026"
 }

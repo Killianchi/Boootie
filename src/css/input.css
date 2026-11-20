@@ -172,3 +172,19 @@ a.underline:hover, footer a:hover { text-decoration-thickness: 3px; }
 .was { position: relative; display: inline-block; text-decoration: none; color: #555; margin-right: .15em; }
 .was .strike { position: absolute; left: -6%; top: 28%; width: 112%; height: 48%; overflow: visible; pointer-events: none; }
 .was .strike path { fill: none; stroke: #E5322D; stroke-width: 2; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+
+/* legal and support pages: readable long-form text */
+.legal { max-width: 760px; }
+.legal .lede { margin-top: 1rem; font-size: 1.15rem; max-width: 60ch; }
+.legal section { margin-top: 2.5rem; }
+.legal h2 { font-size: 1.6rem; }
+.legal h3 { font-size: 1.15rem; margin-top: 1.5rem; }
+.legal p, .legal li, .legal dd { max-width: 65ch; line-height: 1.55; }
+.legal p { margin-top: .75rem; }
+.legal ul { margin-top: .75rem; padding-left: 1.2rem; list-style: disc; }
+.legal li + li { margin-top: .4rem; }
+.legal dl { margin-top: .5rem; }
+.legal dt { margin-top: 1rem; font-weight: 700; }
+.legal dd { margin: .25rem 0 0; }
+.legal address { margin-top: .75rem; font-style: normal; line-height: 1.55; }
+.legal a:not(.btn) { text-decoration: underline; text-underline-offset: 3px; }

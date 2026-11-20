@@ -30,26 +30,42 @@ const v = {
   year: new Date().getFullYear(),
   formAction: `https://formspree.io/f/${cfg.formspreeId}`,
   ogImage: `${cfg.siteUrl}/img/og.png`,
+  // contact details for the legal pages; blanks render as visible placeholders
+  legalName: cfg.legalName || '[name to be added]',
+  legalAddressHtml: (cfg.legalAddress || '[postal address to be added]').split('\n').map(esc).join('<br>'),
+  contactEmail: cfg.contactEmail || 'contact-email-to-be-added',
 };
 
-let html = readFileSync(root + 'src/index.html', 'utf8');
-html = html.replace(/\{\{>\s*([\w-]+)\s*\}\}/g, (_, name) => {
-  const p = `${root}src/doodles/${name}.svg`;
-  if (!existsSync(p)) throw new Error(`missing doodle partial: ${name}`);
-  return readFileSync(p, 'utf8');
-});
-html = html.replace(/\{\{\{(\w+)\}\}\}/g, (_, k) => { if (!(k in v)) throw new Error(`unknown key ${k}`); return String(v[k]); });
-html = html.replace(/\{\{(\w+)\}\}/g, (_, k) => { if (!(k in v)) throw new Error(`unknown key ${k}`); return k === 'headline' || k === 'headlinesJson' ? String(v[k]) : esc(v[k]); });
-
+const render = (tpl, extra = {}) => {
+  const vals = { ...v, ...extra };
+  tpl = tpl.replace(/\{\{>\s*([\w-]+)\s*\}\}/g, (_, name) => {
+    const p = `${root}src/doodles/${name}.svg`;
+    if (!existsSync(p)) throw new Error(`missing doodle partial: ${name}`);
+    return readFileSync(p, 'utf8');
+  });
+  tpl = tpl.replace(/\{\{\{(\w+)\}\}\}/g, (_, k) => { if (!(k in vals)) throw new Error(`unknown key ${k}`); return String(vals[k]); });
+  return tpl.replace(/\{\{(\w+)\}\}/g, (_, k) => { if (!(k in vals)) throw new Error(`unknown key ${k}`); return k === 'headline' || k === 'headlinesJson' ? String(vals[k]) : esc(vals[k]); });
+};
+const html = render(readFileSync(root + 'src/index.html', 'utf8'));
+const layout = readFileSync(root + 'src/legal-layout.html', 'utf8');
+const legalPages = [
+  { slug: 'privacy', title: 'Privacy Policy', description: 'How the boootie app, device and website handle your data.' },
+  { slug: 'support', title: 'Support', description: 'Get help with boootie, the app or your pre-order.' },
+];
 mkdirSync(root + 'dist', { recursive: true });
 cpSync(root + 'public', root + 'dist', { recursive: true });
 writeFileSync(root + 'dist/index.html', html);
+for (const pg of legalPages) {
+  const body = render(readFileSync(`${root}src/${pg.slug}.body.html`, 'utf8'));
+  writeFileSync(`${root}dist/${pg.slug}.html`, render(layout, { pageTitle: pg.title, pageDescription: pg.description, pageSlug: pg.slug, pageBody: body }));
+}
 {
   // light minification: strip comments and leading indentation (no tooling needed)
   const js = readFileSync(root + 'src/js/main.js', 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').split('\n').map(l => l.trim()).filter(Boolean).join('\n');
   writeFileSync(root + 'dist/main.js', js);
 }
 writeFileSync(root + 'dist/robots.txt', `User-agent: *\nAllow: /\nSitemap: ${cfg.siteUrl}/sitemap.xml\n`);
-writeFileSync(root + 'dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${cfg.siteUrl}/</loc></url></urlset>\n`);
+writeFileSync(root + 'dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${cfg.siteUrl}/</loc></url>${legalPages.map(pg => `<url><loc>${cfg.siteUrl}/${pg.slug}</loc></url>`).join('')}</urlset>\n`);
 console.log(`built dist/index.html (${(html.length / 1024).toFixed(0)} KB)`);
+if (!cfg.legalName || !cfg.legalAddress || !cfg.contactEmail) console.warn('warning: legalName, legalAddress or contactEmail is empty; the privacy and support pages show placeholders');
 if (cfg.stripeLink.includes('REPLACE_ME') || cfg.formspreeId.includes('REPLACE_ME')) console.warn('warning: placeholder values still in site.config.json');

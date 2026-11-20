@@ -1,0 +1,109 @@
+<h1 class="text-4xl md:text-6xl">Privacy Policy</h1>
+<p class="lede">This policy covers the boootie app, the boootie device and the boootie.com website. Effective {{policyDate}}.</p>
+
+<section aria-labelledby="short">
+<h2 id="short">The short version</h2>
+<ul>
+  <li>boootie only looks at your screen while it is doing a task you asked for.</li>
+  <li>Screenshots and your requests go from your phone to the AI provider <em>you</em> chose (for example Anthropic or OpenAI). boootie does not run a server that sees or stores them.</li>
+  <li>We do not sell your data, we do not show ads, and we do not track you across other apps or websites.</li>
+  <li>You can delete everything boootie keeps about you, in the app or by emailing us.</li>
+</ul>
+</section>
+
+<section aria-labelledby="who">
+<h2 id="who">Who is responsible</h2>
+<p>The controller responsible for your personal data under the Swiss Federal Act on Data Protection (FADP) and, where it applies, the EU General Data Protection Regulation (GDPR) is:</p>
+<address>{{legalName}}<br>{{{legalAddressHtml}}}<br><a href="mailto:{{contactEmail}}">{{contactEmail}}</a></address>
+</section>
+
+<section aria-labelledby="collect">
+<h2 id="collect">What we collect and why</h2>
+
+<h3>When you use the app and device</h3>
+<dl>
+  <dt>Screen content</dt>
+  <dd>While boootie carries out a task you gave it, it takes screenshots of your phone so the AI can see what is on screen and decide where to tap or what to type. Screenshots are sent directly to your chosen AI provider for that task and are not stored by boootie afterwards. boootie does not capture your screen when no task is running.</dd>
+  <dt>Your requests</dt>
+  <dd>What you ask boootie to do, typed or spoken, is sent to your chosen AI provider to carry out the task. If you speak, the audio is turned into text before it is sent.</dd>
+  <dt>Actions boootie takes</dt>
+  <dd>Taps, swipes and text that boootie enters on your phone happen locally on the device. A short task history is kept on your phone so you can see what boootie did; you can clear it at any time.</dd>
+  <dt>Your AI account connection</dt>
+  <dd>To connect your AI provider, you sign in with that provider or enter an access key. The key or sign-in token is stored in your phone's secure storage (the iOS Keychain) and is only sent to that provider.</dd>
+  <dt>Device and diagnostics</dt>
+  <dd>The device's serial number, firmware version and connection status are used to pair the device and install updates. If you opt in, anonymous crash reports and diagnostics help us fix bugs; they contain no screenshots and no content of your tasks.</dd>
+</dl>
+
+<h3>When you visit boootie.com</h3>
+<dl>
+  <dt>Analytics</dt>
+  <dd>We count page views and button clicks with Vercel Web Analytics, which uses no cookies and does not identify you personally. We use this to see which parts of the page work.</dd>
+  <dt>Where you came from</dt>
+  <dd>If you arrive from a link with a campaign tag (for example from a video), the tag is passed to the checkout so we can tell which video led to a pre-order. It is stored in your browser for that visit only.</dd>
+</dl>
+
+<h3>When you pre-order</h3>
+<dl>
+  <dt>Payment and order details</dt>
+  <dd>Deposits are processed by Stripe. Stripe collects your name, email, billing details and card information under its own privacy policy. We receive your name, email, country, the amount paid and the order status, and use them to fulfil and refund your order and to contact you about it. We never see your full card number.</dd>
+</dl>
+</section>
+
+<section aria-labelledby="legal">
+<h2 id="legal">Legal basis (GDPR)</h2>
+<p>We process data to provide the app, device and orders you asked for (performance of a contract, Art. 6(1)(b) GDPR), to keep the service secure and working (legitimate interests, Art. 6(1)(f)), to meet legal obligations such as bookkeeping (Art. 6(1)(c)), and, for optional diagnostics, with your consent (Art. 6(1)(a)), which you can withdraw at any time in the app's settings.</p>
+</section>
+
+<section aria-labelledby="share">
+<h2 id="share">Who we share data with</h2>
+<p>We only share data with services needed to run boootie:</p>
+<ul>
+  <li><strong>The AI provider you choose</strong> (for example Anthropic, OpenAI or another model you connect) receives your requests and the screenshots needed for a task. Their own privacy policy and terms apply to that data, including whether they keep it or use it for training. Please review the settings and policy of the provider you connect.</li>
+  <li><strong>Stripe</strong> processes pre-order payments and refunds.</li>
+  <li><strong>Vercel</strong> hosts boootie.com and provides cookieless analytics.</li>
+  <li><strong>Apple</strong> distributes the app; Apple's privacy policy applies to App Store downloads.</li>
+  <li>Authorities, only if the law requires it.</li>
+</ul>
+<p>We do not sell personal data and do not share it for advertising.</p>
+</section>
+
+<section aria-labelledby="transfer">
+<h2 id="transfer">International transfers</h2>
+<p>Some of these providers process data outside Switzerland and the EU, mainly in the United States. Where that happens, transfers rely on adequacy decisions (such as the Swiss-U.S. and EU-U.S. Data Privacy Framework) or the European Commission's standard contractual clauses.</p>
+</section>
+
+<section aria-labelledby="keep">
+<h2 id="keep">How long we keep data</h2>
+<ul>
+  <li>Screenshots: not stored by boootie; they exist only for the duration of the task.</li>
+  <li>Task history and AI connection: on your phone until you clear them, disconnect, or delete the app.</li>
+  <li>Order and payment records: as long as needed for your order and then for 10 years, as Swiss accounting law requires.</li>
+  <li>Diagnostics (if enabled): up to 90 days.</li>
+</ul>
+</section>
+
+<section aria-labelledby="rights">
+<h2 id="rights">Your rights</h2>
+<p>You can ask us to access, correct, delete or export your personal data, to restrict or object to processing, and to withdraw consent at any time. You can delete your app data directly in the app under <em>Settings → Delete my data</em>, or email us at <a href="mailto:{{contactEmail}}">{{contactEmail}}</a>. We reply within 30 days.</p>
+<p>You can also complain to a data protection authority: in Switzerland the Federal Data Protection and Information Commissioner (FDPIC, <a href="https://www.edoeb.admin.ch">edoeb.admin.ch</a>), or in the EU the authority in your country.</p>
+</section>
+
+<section aria-labelledby="security">
+<h2 id="security">Security</h2>
+<p>Data is encrypted in transit (TLS). AI access keys are kept in the iOS Keychain. boootie only acts on your phone while a task you started is running, and you can stop it at any time.</p>
+</section>
+
+<section aria-labelledby="kids">
+<h2 id="kids">Children</h2>
+<p>boootie is not intended for children under 16, and we do not knowingly collect their data. If you believe a child has given us personal data, contact us and we will delete it.</p>
+</section>
+
+<section aria-labelledby="changes">
+<h2 id="changes">Changes</h2>
+<p>If we change this policy, we will update the date at the top and, for significant changes, tell you in the app or by email before they take effect.</p>
+</section>
+
+<section aria-labelledby="contact">
+<h2 id="contact">Contact</h2>
+<p>Questions about privacy: <a href="mailto:{{contactEmail}}">{{contactEmail}}</a></p>
+</section>

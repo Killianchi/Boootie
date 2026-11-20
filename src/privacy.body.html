@@ -21,7 +21,7 @@
 <section aria-labelledby="how">
 <h2 id="how">How boootie works</h2>
 <p>You connect boootie to an AI assistant, such as Claude. While you are casting, the boootie app keeps an encrypted connection (TLS) open to boootie's relay server. When the assistant wants to see your screen or act on it, its request goes to the relay, the relay passes it to your phone, and your phone answers through the relay.</p>
-<p>The connection is encrypted in transit, but not end to end: to forward a screenshot, the relay decrypts it, so for that moment it exists unencrypted in the relay's memory on Cloudflare's servers. It is not written to storage.</p>
+<p>boootie keeps no logs of the relay's traffic. The connection is encrypted in transit, but not end to end: to forward a screenshot, the relay decrypts it, so for that moment it exists unencrypted in the relay's memory on Cloudflare's servers. It is not written to storage.</p>
 </section>
 
 <section aria-labelledby="collect">
@@ -39,8 +39,6 @@
 <dl>
   <dt>Phone registration</dt>
   <dd>For each phone: a random phone id, SHA-256 hashes of the phone's access key and connection link (not the key or link themselves), and the date the phone registered. We use these to let only your assistant reach your phone.</dd>
-  <dt>Request logs</dt>
-  <dd>Cloudflare's request logging is enabled for the relay. Each log entry records technical details such as the time and the response status. boootie does not store or log your screenshots, taps or typed text. They are used to keep the relay running and to investigate faults, and they are deleted automatically when Cloudflare's log retention period ends.</dd>
 </dl>
 
 <h3>Handled by your AI provider</h3>
@@ -63,13 +61,13 @@
 
 <section aria-labelledby="legal">
 <h2 id="legal">Legal basis (GDPR)</h2>
-<p>We process data to provide the service and orders you asked for (performance of a contract, Art. 6(1)(b) GDPR), to keep the relay secure and working, including request logs (legitimate interests, Art. 6(1)(f)), and to meet legal obligations such as bookkeeping (Art. 6(1)(c)).</p>
+<p>We process data to provide the service and orders you asked for (performance of a contract, Art. 6(1)(b) GDPR), to keep the relay secure and working (legitimate interests, Art. 6(1)(f)), and to meet legal obligations such as bookkeeping (Art. 6(1)(c)).</p>
 </section>
 
 <section aria-labelledby="share">
 <h2 id="share">Service providers and recipients</h2>
 <ul>
-  <li><strong>Cloudflare</strong> hosts boootie's relay server as our processor. Screenshots, actions and request logs pass through its infrastructure as described above.</li>
+  <li><strong>Cloudflare</strong> hosts boootie's relay server as our processor. Screenshots and actions pass through its infrastructure as described above. Request logging for the relay is turned off.</li>
   <li><strong>The AI provider you connect</strong> (for example Anthropic) receives the screenshots and results of actions your assistant asks for. It acts under its own terms and privacy policy, not on our behalf.</li>
   <li><strong>Stripe</strong> processes pre-order payments and refunds.</li>
   <li><strong>Vercel</strong> hosts boootie.com and provides cookieless analytics, as our processor.</li>
@@ -89,7 +87,6 @@
 <ul>
   <li>Screenshots, taps and typed text: not stored or logged by boootie; they exist only in memory while a single request is in flight.</li>
   <li>Phone registration (random id, hashed keys, registration date): until you ask us to delete it or stop using boootie.</li>
-  <li>Relay request logs: until Cloudflare's log retention period ends.</li>
   <li>Order and payment records: as long as needed for your order, then 10 years as Swiss accounting law requires.</li>
   <li>Data held by your AI provider: according to that provider's policy and your settings with them.</li>
 </ul>

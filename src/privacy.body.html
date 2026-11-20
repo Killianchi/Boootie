@@ -5,7 +5,7 @@
 <h2 id="short">The short version</h2>
 <ul>
   <li>Your phone only sends a screenshot when the AI assistant you connected asks for one, and only while you are casting. Nothing is streamed while the assistant is idle.</li>
-  <li>Screenshots, taps and typed text pass through boootie's relay server, hosted on Cloudflare. The relay only forwards them. boootie never saves, logs or looks at them.</li>
+  <li>Screenshots, taps and typed text pass through boootie's relay server, hosted on Cloudflare. The relay only forwards them: boootie does not store or log your screenshots, taps or typed text, and never looks at them.</li>
   <li>Once a screenshot reaches your AI provider (for example Anthropic for Claude), that provider handles it under its own privacy policy, including keeping it in your conversation history.</li>
   <li>boootie stores only a random id for your phone, hashed access keys and the date your phone was registered.</li>
   <li>We do not sell your data, show ads or track you across other apps or websites.</li>
@@ -27,12 +27,12 @@
 <section aria-labelledby="collect">
 <h2 id="collect">What data is involved</h2>
 
-<h3>Passed through the relay, not stored</h3>
+<h3>Passed through the relay, not stored or logged</h3>
 <dl>
   <dt>Screenshots</dt>
   <dd>When the assistant asks to see your screen, which also happens after every action it takes, your phone captures the current screen, compresses it to a JPEG and sends it through the relay to the assistant. The image is held in the relay's memory only while that one request is in flight, then discarded. It is never saved, logged or viewed by boootie. Anything visible on your screen at that moment, such as messages, names or notifications, can appear in the screenshot.</dd>
   <dt>Actions: taps, swipes and typed text</dt>
-  <dd>The assistant's instructions to tap, swipe, scroll or type travel through the relay to your phone the same way: forwarded, not stored. Typed text can include anything you asked the assistant to type.</dd>
+  <dd>The assistant's instructions to tap, swipe, scroll or type travel through the relay to your phone the same way: forwarded, not stored or logged. Typed text can include anything you asked the assistant to type.</dd>
 </dl>
 
 <h3>Stored by boootie</h3>
@@ -40,7 +40,7 @@
   <dt>Phone registration</dt>
   <dd>For each phone: a random phone id, SHA-256 hashes of the phone's access key and connection link (not the key or link themselves), and the date the phone registered. We use these to let only your assistant reach your phone.</dd>
   <dt>Request logs</dt>
-  <dd>Cloudflare's request logging is enabled for the relay. Each log entry records technical details such as the time, the request path and the response status. The request path contains your phone id and connection link secret, so these appear in the logs. Logs never contain screenshots or typed text. They are used to keep the relay running and to investigate faults, and they are deleted automatically when Cloudflare's log retention period ends.</dd>
+  <dd>Cloudflare's request logging is enabled for the relay. Each log entry records technical details such as the time and the response status. boootie does not store or log your screenshots, taps or typed text. They are used to keep the relay running and to investigate faults, and they are deleted automatically when Cloudflare's log retention period ends.</dd>
 </dl>
 
 <h3>Handled by your AI provider</h3>
@@ -87,7 +87,7 @@
 <section aria-labelledby="keep">
 <h2 id="keep">How long data is kept</h2>
 <ul>
-  <li>Screenshots and actions: not stored by boootie; they exist only in memory while a single request is in flight.</li>
+  <li>Screenshots, taps and typed text: not stored or logged by boootie; they exist only in memory while a single request is in flight.</li>
   <li>Phone registration (random id, hashed keys, registration date): until you ask us to delete it or stop using boootie.</li>
   <li>Relay request logs: until Cloudflare's log retention period ends.</li>
   <li>Order and payment records: as long as needed for your order, then 10 years as Swiss accounting law requires.</li>

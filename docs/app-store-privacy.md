@@ -3,8 +3,8 @@
 Answers below match the policy at https://boootie.com/privacy. Data flow: screenshots and actions
 (taps, swipes, typed text) pass through boootie's relay on Cloudflare, which forwards them in
 memory without storing or logging them. boootie stores a random phone id, SHA-256 hashes of the
-phone's key and link, and the registration date. Cloudflare request logs record time, path and
-status; the path includes the phone id and link secret. If any of this changes, update both the
+phone's key and link, and the registration date. Cloudflare request logs record technical details only;
+boootie does not store or log screenshots, taps or typed text. If any of this changes, update both the
 policy and these answers before submitting.
 
 ## URLs (App Information page)
@@ -45,9 +45,6 @@ still has to be declared, because the app transmits it.
 - The relay never writes screenshots or typed text to storage or logs.
 - Only hashes of the phone's key and link are stored.
 - Link to https://boootie.com/privacy from inside the app (settings or onboarding).
-- Recommended: move the link secret out of the request path (for example into a header), so
-  Cloudflare's request logs no longer contain it in plain text. Then update the "Request logs"
-  paragraph in the policy.
 
 ## Before submitting
 

@@ -1,8 +1,10 @@
 # App Store Connect: privacy setup for boootie
 
-Answers below match the policy at https://boootie.com/privacy. They assume the data flow
-described there: screenshots and requests go straight from the phone to the AI provider the
-user connects, and boootie runs no server that sees them. If that changes, update both the
+Answers below match the policy at https://boootie.com/privacy. Data flow: screenshots and actions
+(taps, swipes, typed text) pass through boootie's relay on Cloudflare, which forwards them in
+memory without storing or logging them. boootie stores a random phone id, SHA-256 hashes of the
+phone's key and link, and the registration date. Cloudflare request logs record time, path and
+status; the path includes the phone id and link secret. If any of this changes, update both the
 policy and these answers before submitting.
 
 ## URLs (App Information page)
@@ -23,12 +25,10 @@ still has to be declared, because the app transmits it.
 
 | Data type (Apple's category) | Collected? | Linked to the user? | Used for tracking? | Purpose |
 |---|---|---|---|---|
-| User Content → Photos or Videos (screenshots) | Yes | No | No | App Functionality |
-| User Content → Audio Data (voice requests, if offered) | Yes | No | No | App Functionality |
-| User Content → Other User Content (typed requests) | Yes | No | No | App Functionality |
-| Identifiers → Device ID (device serial for pairing and updates) | Yes | No | No | App Functionality |
-| Diagnostics → Crash Data, Performance Data (opt-in only) | Yes | No | No | App Functionality |
-| Contact Info, Location, Financial Info, Browsing History, Contacts, Health | No | | | |
+| User Content → Photos or Videos (screenshots, forwarded to the user's AI provider, which keeps them) | Yes | No | No | App Functionality |
+| User Content → Other User Content (text the assistant types on the phone) | Yes | No | No | App Functionality |
+| Identifiers → Device ID (random phone id, stored with hashed keys) | Yes | No | No | App Functionality |
+| Contact Info, Location, Financial Info, Browsing History, Contacts, Health, Audio, Diagnostics | No | | | |
 
 - **Tracking:** No. boootie does not link data with third-party data for advertising and does
   not share it with data brokers, so the app does **not** need the App Tracking Transparency
@@ -37,22 +37,20 @@ still has to be declared, because the app transmits it.
   not part of the app's label. If you later sell inside the app, add Financial Info and
   Contact Info (Name, Email).
 - **Account:** if the app ever has user accounts, Apple requires an in-app way to delete the
-  account (guideline 5.1.1(v)). The policy already promises *Settings → Delete my data*.
+  account (guideline 5.1.1(v)). Today deletion is by email, as the policy says.
 
-## Things the app itself must do to match the policy
+## Things that must stay true for the policy to be accurate
 
-- Ask for screen and microphone access with clear permission text (Info.plist usage strings),
-  for example: "boootie uses the microphone so you can say what you want it to do."
-- Only capture the screen while a task the user started is running, and show that a task is
-  running with a way to stop it.
-- Store AI access keys in the iOS Keychain.
-- Offer *Settings → Delete my data* that clears task history and disconnects the AI provider.
-- Ship diagnostics off by default, with an opt-in switch.
-- Link to https://boootie.com/privacy from inside the app (Settings or onboarding).
+- The phone sends a screenshot only when the assistant asks, and only while casting.
+- The relay never writes screenshots or typed text to storage or logs.
+- Only hashes of the phone's key and link are stored.
+- Link to https://boootie.com/privacy from inside the app (settings or onboarding).
+- Recommended: move the link secret out of the request path (for example into a header), so
+  Cloudflare's request logs no longer contain it in plain text. Then update the "Request logs"
+  paragraph in the policy.
 
 ## Before submitting
 
-1. Fill in `legalName`, `legalAddress` and `contactEmail` in `site.config.json`, make sure the
-   mailbox receives mail, then rebuild and deploy. The pages show placeholders until then.
+1. Make sure the contact mailbox in `site.config.json` receives mail.
 2. Re-read the policy against how the finished app actually behaves.
 3. Have it reviewed by a Swiss lawyer or privacy advisor; this draft is not legal advice.

@@ -16,13 +16,13 @@
   "stripeLink": "https://buy.stripe.com/5kQbJ28xD0Fw48Cdkb38400",
   "shipDate": "",
   "formspreeId": "REPLACE_ME",
-  "supportEmail": "hello@boootie.com",
+  "supportEmail": "",
   "accent": "#D97757",
   "onAccent": "#000000",
-  "placeholders": "formspreeId and supportEmail are placeholders until confirmed.",
+  "placeholders": "formspreeId is unused (signup form removed).",
   "retailUsd": 219,
-  "legalName": "",
-  "legalAddress": "",
-  "contactEmail": "",
+  "legalName": "Killian Chiao",
+  "legalAddress": "Zurlindenstrasse 5\n8003 Zürich\nSwitzerland",
+  "contactEmail": "Killianchi@icloud.com",
   "policyDate": "20 November 2026"
 }
